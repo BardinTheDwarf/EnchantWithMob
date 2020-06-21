@@ -1,0 +1,51 @@
+package com.baguchan.enchantwithmob.registry;
+
+import com.baguchan.enchantwithmob.EnchantWithMob;
+import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
+
+@Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class MobEnchants {
+    public static final MobEnchant PROTECTION = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.powerful));
+    public static final MobEnchant SPEEDY = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal));
+    public static final MobEnchant STRONG = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal));
+
+
+    private static ForgeRegistry<MobEnchant> registry;
+    @SubscribeEvent
+    public static void onNewRegistry(RegistryEvent.NewRegistry event) {
+        registry = (ForgeRegistry<MobEnchant>) new RegistryBuilder<MobEnchant>()
+                .setType(MobEnchant.class)
+                .setName(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"))
+                .setDefaultKey(new ResourceLocation(EnchantWithMob.MODID, "protection"))
+                .create();
+    }
+
+
+    @SubscribeEvent
+    public static void onRegisterLores(RegistryEvent.Register<MobEnchant> event) {
+        event.getRegistry().registerAll(PROTECTION.setRegistryName("protection"),
+                SPEEDY.setRegistryName("speedy"),
+                STRONG.setRegistryName("speedy"));
+    }
+
+    public static ForgeRegistry<MobEnchant> getRegistry() {
+        if (registry == null) {
+            throw new IllegalStateException("Registry not yet initialized");
+        }
+        return registry;
+    }
+
+    public static int getId(MobEnchant biome) {
+        return registry.getID(biome);
+    }
+
+    public static MobEnchant byId(int id) {
+        return registry.getValue(id);
+    }
+}
