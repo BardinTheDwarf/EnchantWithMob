@@ -20,32 +20,30 @@ public class ClientEventHandler {
     public static void onRenderLayer(RenderLivingEvent event) {
         LivingEntity entity = event.getEntity();
 
-        entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-        {
-            if (!doesRendererHaveLayer(event.getRenderer(), EnchantLayer.class)) {
-                event.getRenderer().addLayer(new EnchantLayer(event.getRenderer()));
-            }
-        });
+
+        if (!doesRendererHaveLayer(event.getRenderer(), EnchantLayer.class)) {
+            event.getRenderer().addLayer(new EnchantLayer(event.getRenderer()));
+        }
     }
 
+
     @SuppressWarnings("unchecked")
-    public static <T extends LayerRenderer<?,?>> T getRenderLayer(LivingRenderer<?,?> renderer, Class<T> cls) {
+    public static <T extends LayerRenderer<?, ?>> T getRenderLayer(LivingRenderer<?, ?> renderer, Class<T> cls) {
         try {
-            List<? extends LayerRenderer<?,?>> layers = renderer.layerRenderers;
-            for(LayerRenderer<?,?> layer : layers) {
-                if(cls == layer.getClass()) {
+            List<? extends LayerRenderer<?, ?>> layers = renderer.layerRenderers;
+            for (LayerRenderer<?, ?> layer : layers) {
+                if (cls == layer.getClass()) {
                     return (T) layer;
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
         return null;
     }
 
 
-
-    public static boolean doesRendererHaveLayer(LivingRenderer<?,?> renderer, Class cls) {
+    public static boolean doesRendererHaveLayer(LivingRenderer<?, ?> renderer, Class cls) {
         return getRenderLayer(renderer, cls) != null;
     }
 }

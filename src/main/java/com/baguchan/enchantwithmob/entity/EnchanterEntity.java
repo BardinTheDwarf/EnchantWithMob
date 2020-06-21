@@ -106,7 +106,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     public class SpellGoal extends SpellcastingIllagerEntity.UseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
-            return entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
         };
 
         /**
@@ -153,10 +153,9 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             if (entity != null && entity.isAlive()) {
                 entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
-                    cap.setMobEnchant(EnchanterEntity.this, MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
+                    cap.setMobEnchant(entity, MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
                 });
             }
-
         }
 
         protected int getCastWarmupTime() {

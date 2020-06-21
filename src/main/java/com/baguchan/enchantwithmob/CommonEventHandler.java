@@ -8,7 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,15 +27,18 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void onJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
+    public static void onUpdateEnchanted(LivingEvent.LivingUpdateEvent event) {
+        LivingEntity livingEntity = event.getEntityLiving();
 
-            if (!event.getWorld().isRemote) {
-                event.getEntity().getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+        if (livingEntity.getEntityWorld().getGameTime() % 80 == 0) {
+            if (!livingEntity.world.isRemote) {
+                livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
                     //Sync Client Enchant
-                    EnchantedMessage message = new EnchantedMessage(event.getEntity(), cap.getMobEnchant());
-                    EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> event.getEntity()), message);
+                    if (cap.hasEnchant()) {
+                        EnchantedMessage message = new EnchantedMessage(livingEntity, cap.getMobEnchant());
+                        EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
+                    }
                 });
             }
         }

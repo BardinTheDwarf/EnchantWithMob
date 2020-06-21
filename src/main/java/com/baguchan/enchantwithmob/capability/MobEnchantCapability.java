@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
-    private MobEnchant mobEnchant;
+    private MobEnchant mobEnchant = null;
 
 
     public MobEnchant getMobEnchant() {

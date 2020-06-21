@@ -207,6 +207,6 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
 
     @Override
     public ModelRenderer getModelHead() {
-        return null;
+        return this.head;
     }
 }
