@@ -3,10 +3,10 @@ package com.baguchan.enchantwithmob.client.model;
 import com.baguchan.enchantwithmob.entity.EnchanterEntity;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.*;
+import net.minecraft.client.renderer.entity.model.IHasArm;
+import net.minecraft.client.renderer.entity.model.IHasHead;
+import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
@@ -166,10 +166,10 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
             this.handR.rotationPointX = -5.0F;
             this.handL.rotationPointZ = 0.0F;
             this.handL.rotationPointX = 5.0F;
-            this.handR.rotateAngleX = -0.6F + MathHelper.cos(ageInTicks * 0.062F) * 0.05F;
-            this.handL.rotateAngleX = -0.6F +  MathHelper.cos(ageInTicks * 0.062F) * 0.05F;
-            this.handR.rotateAngleZ = MathHelper.cos(ageInTicks * 0.062F) * 0.05F;
-            this.handL.rotateAngleZ = MathHelper.cos(ageInTicks * 0.062F) * 0.05F;
+            this.handR.rotateAngleX = -0.95F + MathHelper.cos(ageInTicks * 0.265F) * 0.075F;
+            this.handL.rotateAngleX = -0.95F + MathHelper.cos(ageInTicks * 0.265F) * 0.075F;
+            this.handR.rotateAngleZ = -MathHelper.cos(ageInTicks * 0.265F) * 0.075F;
+            this.handL.rotateAngleZ = MathHelper.cos(ageInTicks * 0.265F) * 0.075F;
             this.handR.rotateAngleY = 0.0F;
             this.handL.rotateAngleY = 0.0F;
         } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CELEBRATING) {

@@ -8,8 +8,12 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 
 public class MobEnchantUtils {
-    public static MobEnchant getTomeTypeFromNBT(@Nullable CompoundNBT tag) {
+    public static MobEnchant getEnchantTypeFromNBT(@Nullable CompoundNBT tag) {
         return tag == null ? null : MobEnchants.getRegistry().getValue(ResourceLocation.tryCreate(tag.getString("MobEnchant")));
 
+    }
+
+    public static MobEnchant getEnchantFromString(@Nullable String id) {
+        return id == null ? null : MobEnchants.getRegistry().getValue(ResourceLocation.tryCreate(id));
     }
 }

@@ -4,12 +4,10 @@ import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,10 +22,8 @@ public class ClientEventHandler {
 
         entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
-            if(cap.hasEnchant()) {
-                if (!doesRendererHaveLayer(event.getRenderer(), EnchantLayer.class)) {
-                    event.getRenderer().addLayer(new EnchantLayer(event.getRenderer()));
-                }
+            if (!doesRendererHaveLayer(event.getRenderer(), EnchantLayer.class)) {
+                event.getRenderer().addLayer(new EnchantLayer(event.getRenderer()));
             }
         });
     }

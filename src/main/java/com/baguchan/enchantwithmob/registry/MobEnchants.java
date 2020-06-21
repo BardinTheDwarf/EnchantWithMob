@@ -31,7 +31,7 @@ public class MobEnchants {
     public static void onRegisterLores(RegistryEvent.Register<MobEnchant> event) {
         event.getRegistry().registerAll(PROTECTION.setRegistryName("protection"),
                 SPEEDY.setRegistryName("speedy"),
-                STRONG.setRegistryName("speedy"));
+                STRONG.setRegistryName("strong"));
     }
 
     public static ForgeRegistry<MobEnchant> getRegistry() {

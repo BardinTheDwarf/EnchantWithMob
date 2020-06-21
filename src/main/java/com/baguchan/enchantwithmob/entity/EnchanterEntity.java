@@ -5,20 +5,22 @@ import com.baguchan.enchantwithmob.registry.MobEnchants;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
+import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.entity.monster.AbstractRaiderEntity;
-import com.baguchan.enchantwithmob.entity.EnchanterEntity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeColor;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class EnchanterEntity extends SpellcastingIllagerEntity {
     private LivingEntity enchantTarget;
@@ -31,6 +33,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.8D, 1.15D));
+        this.goalSelector.addGoal(3, new EnchanterEntity.SpellGoal());
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
@@ -92,10 +95,19 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
     }
 
-    public class WololoSpellGoal extends SpellcastingIllagerEntity.UseSpellGoal {
-        private final EntityPredicate field_220845_e = (new EntityPredicate()).setDistance(16.0D).allowInvulnerable().setCustomPredicate((p_220844_0_) -> {
-            return ((SheepEntity)p_220844_0_).getFleeceColor() == DyeColor.BLUE;
-        });
+    @OnlyIn(Dist.CLIENT)
+    public AbstractIllagerEntity.ArmPose getArmPose() {
+        if (this.isSpellcasting()) {
+            return AbstractIllagerEntity.ArmPose.SPELLCASTING;
+        } else {
+            return AbstractIllagerEntity.ArmPose.CROSSED;
+        }
+    }
+
+    public class SpellGoal extends SpellcastingIllagerEntity.UseSpellGoal {
+        private final Predicate<LivingEntity> fillter = (entity) -> {
+            return entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
+        };
 
         /**
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
@@ -111,7 +123,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             } else if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(EnchanterEntity.this.world, EnchanterEntity.this)) {
                 return false;
             } else {
-                List<SheepEntity> list = EnchanterEntity.this.world.getTargettableEntitiesWithinAABB(SheepEntity.class, this.field_220845_e, EnchanterEntity.this, EnchanterEntity.this.getBoundingBox().grow(16.0D, 4.0D, 16.0D));
+                List<LivingEntity> list = EnchanterEntity.this.world.getEntitiesWithinAABB(LivingEntity.class, EnchanterEntity.this.getBoundingBox().grow(16.0D, 4.0D, 16.0D), this.fillter);
                 if (list.isEmpty()) {
                     return false;
                 } else {
@@ -141,9 +153,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             if (entity != null && entity.isAlive()) {
                 entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
-                    if (!cap.hasEnchant()) {
-                        cap.setMobEnchant(MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
-                    }
+                    cap.setMobEnchant(EnchanterEntity.this, MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
                 });
             }
 
@@ -158,11 +168,11 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         }
 
         protected int getCastingInterval() {
-            return 140;
+            return 160;
         }
 
         protected SoundEvent getSpellPrepareSound() {
-            return SoundEvents.ENTITY_EVOKER_PREPARE_WOLOLO;
+            return SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED;
         }
 
         protected SpellcastingIllagerEntity.SpellType getSpellType() {

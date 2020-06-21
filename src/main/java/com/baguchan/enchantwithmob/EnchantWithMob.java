@@ -2,23 +2,15 @@ package com.baguchan.enchantwithmob;
 
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantStorage;
-import com.baguchan.enchantwithmob.entity.EnchanterEntity;
+import com.baguchan.enchantwithmob.message.EnchantedMessage;
 import com.baguchan.enchantwithmob.registry.ModEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,25 +18,35 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(EnchantWithMob.MODID)
 public class EnchantWithMob
 {
+
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
 
     public static final String MODID = "enchantwithmob";
+    public static final String NETWORK_PROTOCOL = "2";
 
     @CapabilityInject(MobEnchantCapability.class)
     public static final Capability<MobEnchantCapability> MOB_ENCHANT_CAP = null;
 
+    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
+            .networkProtocolVersion(() -> NETWORK_PROTOCOL)
+            .clientAcceptedVersions(NETWORK_PROTOCOL::equals)
+            .serverAcceptedVersions(NETWORK_PROTOCOL::equals)
+            .simpleChannel();
+
     public EnchantWithMob() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        this.setupMessages();
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the enqueueIMC method for modloading
@@ -60,9 +62,15 @@ public class EnchantWithMob
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
         CapabilityManager.INSTANCE.register(MobEnchantCapability.class, new MobEnchantStorage<>(), MobEnchantCapability::new);
+    }
+
+    private void setupMessages() {
+        CHANNEL.messageBuilder(EnchantedMessage.class, 0)
+                .encoder(EnchantedMessage::serialize).decoder(EnchantedMessage::deserialize)
+                .consumer(EnchantedMessage::handle)
+                .add();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
@@ -70,8 +78,7 @@ public class EnchantWithMob
         ModEntities.setupEntitiesClient();
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
+    private void enqueueIMC(final InterModEnqueueEvent event) {
     }
 
     private void processIMC(final InterModProcessEvent event)
