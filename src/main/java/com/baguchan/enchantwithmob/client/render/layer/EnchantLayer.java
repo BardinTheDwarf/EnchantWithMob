@@ -25,7 +25,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
-            if (cap.hasEnchant()) {
+            if (cap.hasEnchant() && !entitylivingbaseIn.isInvisible()) {
                 float f = (float) entitylivingbaseIn.ticksExisted + partialTicks;
                 EntityModel<T> entitymodel = this.func_225635_b_();
                 entitymodel.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);

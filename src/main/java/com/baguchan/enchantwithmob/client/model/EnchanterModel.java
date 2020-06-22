@@ -27,29 +27,33 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
     public ModelRenderer body;
     public ModelRenderer hat;
     public ModelRenderer nose;
+    public ModelRenderer cape;
     private final ModelRenderer arms;
     private final ModelRenderer crossArmR;
     private final ModelRenderer crossArmL;
 
     public EnchanterModel() {
-        this.textureWidth = 64;
+        this.textureWidth = 128;
         this.textureHeight = 64;
+        this.hat = new ModelRenderer(this, 32, 0);
+        this.hat.setRotationPoint(0.0F, 0.0F, 0.0F);
+        this.hat.addBox(-4.0F, -14.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.45F, 0.45F, 0.45F);
+        this.body = new ModelRenderer(this, 0, 0);
+        this.body.setRotationPoint(0.0F, 0.0F, 0.0F);
+        this.body.setTextureOffset(16, 20).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, 0.0F, 0.0F, 0.0F);
+        this.body.setTextureOffset(0, 38).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 18.0F, 6.0F, 0.5F, 0.5F, 0.5F);
         this.nose = new ModelRenderer(this, 24, 0);
         this.nose.setRotationPoint(0.0F, -2.0F, 0.0F);
         this.nose.addBox(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.handL = new ModelRenderer(this, 40, 46);
-        this.handL.mirror = true;
-        this.handL.setRotationPoint(5.0F, 2.0F, 0.0F);
-        this.handL.addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
         this.legL = new ModelRenderer(this, 0, 22);
         this.legL.mirror = true;
         this.legL.setRotationPoint(2.0F, 12.0F, 0.0F);
         this.legL.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.hat = new ModelRenderer(this, 32, 0);
-        this.hat.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.hat.addBox(-4.0F, -14.0F, -4.0F, 8.0F, 8.0F, 8.0F, 0.45F, 0.45F, 0.45F);
-        this.arms = new ModelRenderer(this,44, 22);
-        this.arms.setRotationPoint(0.0F,  2.0F, 0.0F);
+        this.handR = new ModelRenderer(this, 40, 46);
+        this.handR.setRotationPoint(-5.0F, 2.0F, 0.0F);
+        this.handR.addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
+        this.arms = new ModelRenderer(this, 44, 22);
+        this.arms.setRotationPoint(0.0F, 2.0F, 0.0F);
         this.arms.addBox(-8.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F, 0.0F);
         ModelRenderer modelrenderer1 = (new ModelRenderer(this, 44, 22));
         modelrenderer1.mirror = true;
@@ -63,21 +67,23 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
         this.crossArmL.mirror = true;
         this.crossArmL.setRotationPoint(2.0F, 12.0F, 0.0F);
         this.crossArmL.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F);
-        this.legR = new ModelRenderer(this, 0, 22);
-        this.legR.setRotationPoint(-2.0F, 12.0F, 0.0F);
-        this.legR.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.handR = new ModelRenderer(this, 40, 46);
-        this.handR.setRotationPoint(-5.0F, 2.0F, 0.0F);
-        this.handR.addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
         this.head = new ModelRenderer(this, 0, 0);
         this.head.setRotationPoint(0.0F, 0.0F, 0.0F);
         this.head.addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.body = new ModelRenderer(this, 0, 20);
-        this.body.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.body.setTextureOffset(16, 20).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.body.setTextureOffset(0, 38).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 18.0F, 6.0F, 0.5F, 0.5F, 0.5F);
-        this.head.addChild(this.nose);
+        this.legR = new ModelRenderer(this, 0, 22);
+        this.legR.setRotationPoint(-2.0F, 12.0F, 0.0F);
+        this.legR.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
+        this.handL = new ModelRenderer(this, 40, 46);
+        this.handL.mirror = true;
+        this.handL.setRotationPoint(5.0F, 2.0F, 0.0F);
+        this.handL.addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, 0.0F, 0.0F, 0.0F);
+        this.cape = new ModelRenderer(this, 64, 0);
+        this.cape.setRotationPoint(0.0F, 1.0F, 3.4F);
+        this.cape.addBox(-4.5F, 0.0F, 0.0F, 9.0F, 15.0F, 1.0F, 0.6F, 0.7F, 0.0F);
+        this.setRotateAngle(cape, 0.1563815016444822F, 0.0F, 0.0F);
         this.head.addChild(this.hat);
+        this.head.addChild(this.nose);
+        this.body.addChild(this.cape);
     }
 
 
@@ -88,24 +94,26 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
 
     @Override
     public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-        this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+        this.head.rotateAngleY = netHeadYaw * ((float) Math.PI / 180F);
+        this.head.rotateAngleX = headPitch * ((float) Math.PI / 180F);
         this.arms.rotationPointY = 3.0F;
         this.arms.rotationPointZ = -1.0F;
         this.arms.rotateAngleX = -0.75F;
 
         this.legL.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
-        this.legR.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
+        this.legR.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.4F * limbSwingAmount * 0.5F;
+
+        this.cape.rotateAngleX = 0.1F + limbSwingAmount * 0.6F;
 
         if (this.isSitting) {
-            this.handR.rotateAngleX = (-(float)Math.PI / 5F);
+            this.handR.rotateAngleX = (-(float) Math.PI / 5F);
             this.handR.rotateAngleY = 0.0F;
             this.handR.rotateAngleZ = 0.0F;
-            this.handL.rotateAngleX = (-(float)Math.PI / 5F);
+            this.handL.rotateAngleX = (-(float) Math.PI / 5F);
             this.handL.rotateAngleY = 0.0F;
             this.handL.rotateAngleZ = 0.0F;
             this.crossArmR.rotateAngleX = -1.4137167F;
-            this.crossArmR.rotateAngleY = ((float)Math.PI / 10F);
+            this.crossArmR.rotateAngleY = ((float) Math.PI / 10F);
             this.crossArmR.rotateAngleZ = 0.07853982F;
             this.crossArmL.rotateAngleX = -1.4137167F;
             this.crossArmL.rotateAngleY = (-(float)Math.PI / 10F);
@@ -183,6 +191,7 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
             this.handL.rotateAngleX = MathHelper.cos(ageInTicks * 0.6662F) * 0.05F;
             this.handL.rotateAngleZ = -2.3561945F;
             this.handL.rotateAngleY = 0.0F;
+            this.cape.rotateAngleX = 0.1F + limbSwingAmount * 0.6F + 0.5F;
         }
 
         boolean flag = abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSED;

@@ -25,6 +25,10 @@ import java.util.function.Predicate;
 
 public class EnchanterEntity extends SpellcastingIllagerEntity {
     private LivingEntity enchantTarget;
+
+    public float prevCapeX, prevCapeY, prevCapeZ;
+    public float capeX, capeY, capeZ;
+
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, World p_i48551_2_) {
         super(type, p_i48551_2_);
         this.experienceValue = 12;
@@ -72,6 +76,24 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     @Override
     protected void updateAITasks() {
         super.updateAITasks();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.updateCape();
+    }
+
+    private void updateCape() {
+        double elasticity = 0.25;
+        double gravity = -0.1;
+        this.prevCapeX = this.capeX;
+        this.prevCapeY = this.capeY;
+        this.prevCapeZ = this.capeZ;
+        this.capeY += gravity;
+        this.capeX += (this.getPosX() - this.capeX) * elasticity;
+        this.capeY += (this.getPosY() - this.capeY) * elasticity;
+        this.capeZ += (this.getPosZ() - this.capeZ) * elasticity;
     }
 
     @Override
