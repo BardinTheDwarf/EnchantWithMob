@@ -28,7 +28,7 @@ public class MobEnchants {
 
 
     @SubscribeEvent
-    public static void onRegisterLores(RegistryEvent.Register<MobEnchant> event) {
+    public static void onRegisterEnchant(RegistryEvent.Register<MobEnchant> event) {
         event.getRegistry().registerAll(PROTECTION.setRegistryName("protection"),
                 SPEEDY.setRegistryName("speedy"),
                 STRONG.setRegistryName("strong"));

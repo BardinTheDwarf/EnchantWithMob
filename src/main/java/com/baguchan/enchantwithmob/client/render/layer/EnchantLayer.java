@@ -9,14 +9,13 @@ import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.IChargeableMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class EnchantLayer<T extends LivingEntity & IChargeableMob, M extends EntityModel<T>> extends LayerRenderer<T, M> {
+public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> extends LayerRenderer<T, M> {
     private static final ResourceLocation LIGHTNING_TEXTURE = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
     public EnchantLayer(IEntityRenderer<T, M> p_i50947_1_) {

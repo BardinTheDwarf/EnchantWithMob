@@ -11,6 +11,7 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.monster.SpellcastingIllagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
@@ -29,9 +30,11 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         this.experienceValue = 12;
     }
 
+    @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new EnchanterEntity.CastingSpellGoal());
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.8D, 1.15D));
         this.goalSelector.addGoal(3, new EnchanterEntity.SpellGoal());
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.8D));
@@ -43,6 +46,12 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, false));
     }
 
+    @Override
+    protected void registerData() {
+        super.registerData();
+    }
+
+    @Override
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
@@ -50,10 +59,26 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(24.0D);
     }
 
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+    }
+
+    @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+    }
+
+    @Override
     public boolean isOnSameTeam(Entity entityIn) {
         if (super.isOnSameTeam(entityIn)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity)entityIn).getCreatureAttribute() == CreatureAttribute.ILLAGER) {
+        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getCreatureAttribute() == CreatureAttribute.ILLAGER) {
             return this.getTeam() == null && entityIn.getTeam() == null;
         } else {
             return false;
@@ -74,18 +99,22 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     }
 
+    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_ILLUSIONER_DEATH;
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return SoundEvents.ENTITY_ILLUSIONER_HURT;
     }
 
+    @Override
     protected SoundEvent getSpellSound() {
         return SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE;
     }
@@ -96,6 +125,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     }
 
     @OnlyIn(Dist.CLIENT)
+    @Override
     public AbstractIllagerEntity.ArmPose getArmPose() {
         if (this.isSpellcasting()) {
             return AbstractIllagerEntity.ArmPose.SPELLCASTING;
@@ -103,6 +133,22 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             return AbstractIllagerEntity.ArmPose.CROSSED;
         }
     }
+
+    class CastingSpellGoal extends SpellcastingIllagerEntity.CastingASpellGoal {
+        private CastingSpellGoal() {
+            super();
+        }
+
+        @Override
+        public void tick() {
+            if (EnchanterEntity.this.isSpellcasting() && EnchanterEntity.this.getEnchantTarget() != null) {
+                EnchanterEntity.this.getLookController().setLookPositionWithEntity(EnchanterEntity.this.getEnchantTarget(), (float) EnchanterEntity.this.getHorizontalFaceSpeed(), (float) EnchanterEntity.this.getVerticalFaceSpeed());
+            } else if (EnchanterEntity.this.isSpellcasting() && EnchanterEntity.this.getAttackTarget() != null) {
+                EnchanterEntity.this.getLookController().setLookPositionWithEntity(EnchanterEntity.this.getAttackTarget(), (float) EnchanterEntity.this.getHorizontalFaceSpeed(), (float) EnchanterEntity.this.getVerticalFaceSpeed());
+            }
+        }
+    }
+
 
     public class SpellGoal extends SpellcastingIllagerEntity.UseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
@@ -114,13 +160,11 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
          * method as well.
          */
         public boolean shouldExecute() {
-            if (EnchanterEntity.this.getAttackTarget() != null) {
+            if (EnchanterEntity.this.getAttackTarget() == null) {
                 return false;
             } else if (EnchanterEntity.this.isSpellcasting()) {
                 return false;
             } else if (EnchanterEntity.this.ticksExisted < this.spellCooldown) {
-                return false;
-            } else if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(EnchanterEntity.this.world, EnchanterEntity.this)) {
                 return false;
             } else {
                 List<LivingEntity> list = EnchanterEntity.this.world.getEntitiesWithinAABB(LivingEntity.class, EnchanterEntity.this.getBoundingBox().grow(16.0D, 4.0D, 16.0D), this.fillter);
