@@ -37,7 +37,7 @@ public class CommonEventHandler {
                 IWorld world = event.getWorld();
 
                 if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
-                    if (world.getRandom().nextFloat() < 0.01F + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
+                    if (world.getRandom().nextFloat() < 0.005F + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
                         if (!world.isRemote()) {
                             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                             {
