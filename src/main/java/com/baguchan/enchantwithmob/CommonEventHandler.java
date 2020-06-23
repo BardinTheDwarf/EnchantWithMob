@@ -5,11 +5,14 @@ import com.baguchan.enchantwithmob.message.EnchantedMessage;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -22,6 +25,27 @@ public class CommonEventHandler {
 
             if (!(event.getObject() instanceof PlayerEntity)) {
                 event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
+        if (event.getEntity() instanceof LivingEntity) {
+            if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
+                LivingEntity livingEntity = (LivingEntity) event.getEntity();
+                IWorld world = event.getWorld();
+
+                if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
+                    if (world.getRandom().nextFloat() < 0.01F + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
+                        if (!world.isRemote()) {
+                            livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+                            {
+                                cap.setMobEnchant(livingEntity, MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
+                            });
+                        }
+                    }
+                }
             }
         }
     }

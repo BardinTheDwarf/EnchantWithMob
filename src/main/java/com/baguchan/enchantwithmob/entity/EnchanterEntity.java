@@ -193,8 +193,13 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
                 if (list.isEmpty()) {
                     return false;
                 } else {
-                    EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.rand.nextInt(list.size())));
-                    return true;
+                    LivingEntity target = list.get(EnchanterEntity.this.rand.nextInt(list.size()));
+                    if (target != EnchanterEntity.this.getAttackTarget()) {
+                        EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.rand.nextInt(list.size())));
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
         }
@@ -203,7 +208,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean shouldContinueExecuting() {
-            return EnchanterEntity.this.getEnchantTarget() != null && this.spellWarmup > 0;
+            return EnchanterEntity.this.getEnchantTarget() != null && EnchanterEntity.this.getEnchantTarget() != EnchanterEntity.this.getAttackTarget() && this.spellWarmup > 0;
         }
 
         /**
