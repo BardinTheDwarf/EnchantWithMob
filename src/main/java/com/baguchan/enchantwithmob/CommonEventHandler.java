@@ -20,7 +20,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
 public class CommonEventHandler {
     @SubscribeEvent
-    public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof LivingEntity) {
 
             if (!(event.getObject() instanceof PlayerEntity)) {
@@ -30,14 +30,16 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
+    public void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
         if (event.getEntity() instanceof LivingEntity) {
+            IWorld world = event.getWorld();
+
+
             if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
-                IWorld world = event.getWorld();
 
                 if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
-                    if (world.getRandom().nextFloat() < 0.005F + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
+                    if (world.getRandom().nextFloat() < 0.0075F + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
                         if (!world.isRemote()) {
                             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                             {
@@ -48,10 +50,12 @@ public class CommonEventHandler {
                 }
             }
         }
+
+
     }
 
     @SubscribeEvent
-    public static void onUpdateEnchanted(LivingEvent.LivingUpdateEvent event) {
+    public void onUpdateEnchanted(LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
 
         if (livingEntity.getEntityWorld().getGameTime() % 80 == 0) {
