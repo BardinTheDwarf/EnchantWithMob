@@ -3,6 +3,8 @@ package com.baguchan.enchantwithmob.entity;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
@@ -55,12 +57,8 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.registerData();
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(24.0D);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(24.0D);
+    public static AttributeModifierMap.MutableAttribute getAttributeMap() {
+        return MobEntity.func_233666_p_().func_233815_a_(Attributes.field_233821_d_, (double) 0.3F).func_233815_a_(Attributes.field_233818_a_, 24.0D).func_233815_a_(Attributes.field_233819_b_, 24.0D);
     }
 
     @Override
