@@ -20,9 +20,8 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
 public class CommonEventHandler {
     @SubscribeEvent
-    public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+    public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof LivingEntity) {
-
             if (!(event.getObject() instanceof PlayerEntity)) {
                 event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
             }
@@ -30,7 +29,7 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
+    public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
         if (event.getEntity() instanceof LivingEntity) {
             IWorld world = event.getWorld();
 
@@ -39,7 +38,7 @@ public class CommonEventHandler {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
 
                 if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
-                    if (world.getRandom().nextFloat() < 0.0075F + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
+                    if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.1F) {
                         if (!world.isRemote()) {
                             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                             {
@@ -55,7 +54,7 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onUpdateEnchanted(LivingEvent.LivingUpdateEvent event) {
+    public static void onUpdateEnchanted(LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
 
         if (livingEntity.getEntityWorld().getGameTime() % 80 == 0) {
@@ -73,7 +72,7 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public void onEntityHurt(LivingHurtEvent event) {
+    public static void onEntityHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
 
         livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->

@@ -2,6 +2,7 @@ package com.baguchan.enchantwithmob.utils;
 
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
@@ -25,4 +26,19 @@ public class MobEnchantUtils {
             return null;
         }
     }
+
+    public static boolean hasMobEnchant(ItemStack stack) {
+        CompoundNBT compoundnbt = stack.getTag();
+        return compoundnbt != null && compoundnbt.contains("MobEnchant");
+    }
+
+    public static ItemStack addMobEnchantToItemStack(ItemStack itemIn, MobEnchant mobenchant) {
+        ResourceLocation resourcelocation = MobEnchants.getRegistry().getKey(mobenchant);
+        if (resourcelocation != null) {
+            itemIn.getOrCreateTag().putString("MobEnchant", resourcelocation.toString());
+        }
+
+        return itemIn;
+    }
+
 }
