@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,6 +31,8 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     public float prevCapeX, prevCapeY, prevCapeZ;
     public float capeX, capeY, capeZ;
+    private float clientSideBookAnimation0;
+    private float clientSideBookAnimation;
 
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, World p_i48551_2_) {
         super(type, p_i48551_2_);
@@ -79,7 +82,26 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     @Override
     public void tick() {
         super.tick();
+
+        if (this.world.isRemote) {
+            if (this.clientSideBookAnimation != this.clientSideBookAnimation0) {
+                this.recalculateSize();
+            }
+
+            this.clientSideBookAnimation0 = this.clientSideBookAnimation;
+            if (this.isSpellcasting()) {
+                this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation + 0.1F, 0.0F, 1.0F);
+            } else {
+                this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation - 0.15F, 0.0F, 1.0F);
+            }
+        }
+
         this.updateCape();
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public float getBookAnimationScale(float tick) {
+        return MathHelper.lerp(tick, this.clientSideBookAnimation0, this.clientSideBookAnimation) / 1.0F;
     }
 
     private void updateCape() {
