@@ -142,6 +142,11 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     }
 
     @Override
+    protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropSpecialItems(source, looting, recentlyHitIn);
+    }
+
+    @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
     }
