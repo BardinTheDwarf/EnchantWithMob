@@ -26,7 +26,7 @@ public class ModEntities {
     public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
         event.getRegistry().register(ENCHANTER.setRegistryName("enchanter"));
         GlobalEntityTypeAttributes.put(ENCHANTER, EnchanterEntity.getAttributeMap().func_233813_a_());
-        Raid.WaveMember.create("enchanter", ENCHANTER, new int[]{0, 0, 1, 2, 2, 2, 3, 2});
+        Raid.WaveMember.create("enchanter", ENCHANTER, new int[]{0, 0, 1, 2, 1, 2, 3, 2});
     }
 
     @OnlyIn(Dist.CLIENT)
