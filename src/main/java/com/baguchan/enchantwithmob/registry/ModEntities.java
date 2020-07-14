@@ -6,6 +6,7 @@ import com.baguchan.enchantwithmob.entity.EnchanterEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.world.raid.Raid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,6 +26,7 @@ public class ModEntities {
     public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
         event.getRegistry().register(ENCHANTER.setRegistryName("enchanter"));
         GlobalEntityTypeAttributes.put(ENCHANTER, EnchanterEntity.getAttributeMap().func_233813_a_());
+        Raid.WaveMember.create("enchanter", ENCHANTER, new int[]{0, 0, 1, 2, 2, 2, 3, 2});
     }
 
     @OnlyIn(Dist.CLIENT)

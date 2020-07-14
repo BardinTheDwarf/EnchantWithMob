@@ -7,10 +7,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.AbstractIllagerEntity;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.monster.SpellcastingIllagerEntity;
+import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -61,7 +58,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeMap() {
-        return MobEntity.func_233666_p_().func_233815_a_(Attributes.field_233821_d_, (double) 0.3F).func_233815_a_(Attributes.field_233818_a_, 24.0D).func_233815_a_(Attributes.field_233819_b_, 24.0D);
+        return MonsterEntity.func_234295_eP_().func_233815_a_(Attributes.MOVEMENT_SPEED, (double) 0.3F).func_233815_a_(Attributes.MAX_HEALTH, 24.0D).func_233815_a_(Attributes.FOLLOW_RANGE, 24.0D);
     }
 
     @Override
