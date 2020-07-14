@@ -2,6 +2,8 @@ package com.baguchan.enchantwithmob.entity;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
+import com.baguchan.enchantwithmob.registry.ModItems;
+import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -10,6 +12,7 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
@@ -141,6 +144,12 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     @Override
     protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
         super.dropSpecialItems(source, looting, recentlyHitIn);
+
+        if (this.rand.nextFloat() < 0.025F) {
+            ItemStack itemStack = MobEnchantUtils.addMobEnchantToItemStack(new ItemStack(ModItems.MOB_ENCHANT_BOOK), MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
+
+            this.entityDropItem(itemStack);
+        }
     }
 
     @Override
