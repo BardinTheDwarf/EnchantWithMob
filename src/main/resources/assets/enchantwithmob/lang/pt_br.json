@@ -1,0 +1,8 @@
+{
+  "item.enchantwithmob.enchanter_spawn_egg": "Ovo de Gerador de Encantador",
+  "item.enchantwithmob.mob_enchant_book": "Livro Encantador de Mob",
+  "entity.enchantwithmob.enchanter": "Encantador",
+  "mobenchant.enchantwithmob.name.enchantwithmob.protection": "Proteção",
+  "mobenchant.enchantwithmob.name.enchantwithmob.strong": "Força",
+  "mobenchant.enchantwithmob.name.enchantwithmob.speedy": "Velocidade"
+}
