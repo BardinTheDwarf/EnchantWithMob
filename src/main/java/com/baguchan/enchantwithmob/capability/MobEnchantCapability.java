@@ -18,14 +18,20 @@ import javax.annotation.Nullable;
 
 public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
     private MobEnchant mobEnchant = null;
+    private int enchantLevel;
 
 
     public MobEnchant getMobEnchant() {
         return mobEnchant;
     }
 
-    public void setMobEnchant(LivingEntity entity, MobEnchant mobEnchant) {
+    public int getEnchantLevel() {
+        return enchantLevel;
+    }
+
+    public void setMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int enchantLevel) {
         this.mobEnchant = mobEnchant;
+        this.enchantLevel = enchantLevel;
         //Sync Client Enchant
         if (!entity.world.isRemote) {
             EnchantedMessage message = new EnchantedMessage(entity, mobEnchant);
@@ -49,6 +55,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
 
         if(mobEnchant != null) {
             nbt.putString("MobEnchant", mobEnchant.getRegistryName().toString());
+            nbt.putInt("EnchantLevel", enchantLevel);
         }
 
         return nbt;
@@ -56,5 +63,6 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
 
     public void deserializeNBT(CompoundNBT nbt) {
         mobEnchant = MobEnchantUtils.getEnchantTypeFromNBT(nbt);
+        enchantLevel = MobEnchantUtils.getEnchantLevelFromNBT(nbt);
     }
 }

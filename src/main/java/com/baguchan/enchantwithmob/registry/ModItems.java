@@ -13,8 +13,8 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModItems {
-    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBook((new Item.Properties()).group(ItemGroup.MISC));
-    public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC));
+    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBook((new Item.Properties()).maxStackSize(1).maxDamage(5).group(ItemGroup.MISC));
+    public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).group(ItemGroup.MISC));
 
     public static void register(RegistryEvent.Register<Item> registry, Item item, String id) {
         if (item instanceof BlockItem) {

@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -43,7 +44,14 @@ public class CommonEventHandler {
                         if (!world.isRemote()) {
                             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                             {
-                                cap.setMobEnchant(livingEntity, MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
+                                switch (world.getDifficulty()) {
+                                    case EASY:
+                                        cap.setMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 1 + world.getRandom().nextInt(2));
+                                    case NORMAL:
+                                        cap.setMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 1 + world.getRandom().nextInt(4));
+                                    case HARD:
+                                        cap.setMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 2 + world.getRandom().nextInt(4));
+                                }
                             });
                         }
                     }
@@ -89,9 +97,25 @@ public class CommonEventHandler {
             attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 if (cap.hasEnchant() && cap.getMobEnchant() == MobEnchants.STRONG) {
-                    event.setAmount(event.getAmount() * 1.25F);
+                    event.setAmount(getDamageAddition(event.getAmount(), cap));
                 }
             });
         }
+    }
+
+    public static float getDamageReduction(float damage, MobEnchantCapability cap) {
+        int i = cap.getEnchantLevel();
+        if (i > 0) {
+            damage -= (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
+        }
+        return damage;
+    }
+
+    public static float getDamageAddition(float damage, MobEnchantCapability cap) {
+        int i = cap.getEnchantLevel();
+        if (i > 0) {
+            damage += (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
+        }
+        return damage;
     }
 }

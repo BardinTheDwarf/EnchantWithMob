@@ -11,12 +11,13 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
-    public static final MobEnchant PROTECTION = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.powerful));
-    public static final MobEnchant SPEEDY = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal));
-    public static final MobEnchant STRONG = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal));
+    public static final MobEnchant PROTECTION = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal, 4));
+    public static final MobEnchant SPEEDY = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal, 5));
+    public static final MobEnchant STRONG = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal, 3));
 
 
     private static ForgeRegistry<MobEnchant> registry;
+
     @SubscribeEvent
     public static void onNewRegistry(RegistryEvent.NewRegistry event) {
         registry = (ForgeRegistry<MobEnchant>) new RegistryBuilder<MobEnchant>()

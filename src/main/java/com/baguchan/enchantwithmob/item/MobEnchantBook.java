@@ -33,15 +33,16 @@ public class MobEnchantBook extends Item {
             target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 MobEnchant mobEnchant = MobEnchantUtils.getEnchantTypeFromNBT(stack.getTag());
+                int level = MobEnchantUtils.getEnchantLevelFromNBT(stack.getTag());
 
                 if (mobEnchant != null) {
-                    cap.setMobEnchant(target, mobEnchant);
+                    cap.setMobEnchant(target, mobEnchant, level);
                 }
 
             });
             playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-            stack.shrink(1);
+            stack.damageItem(1, playerIn, (entity) -> entity.sendBreakAnimation(hand));
 
             return ActionResultType.SUCCESS;
         }
@@ -53,7 +54,7 @@ public class MobEnchantBook extends Item {
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (this.isInGroup(group)) {
             for (MobEnchant enchant : MobEnchants.getRegistry()) {
-                items.add(MobEnchantUtils.addMobEnchantToItemStack(new ItemStack(this), enchant));
+                items.add(MobEnchantUtils.addMobEnchantToItemStack(new ItemStack(this), enchant, enchant.getMaxLevel()));
 
             }
         }
@@ -65,11 +66,12 @@ public class MobEnchantBook extends Item {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (MobEnchantUtils.hasMobEnchant(stack)) {
             MobEnchant mobEnchant = MobEnchantUtils.getEnchantTypeFromNBT(stack.getTag());
+            int level = MobEnchantUtils.getEnchantLevelFromNBT(stack.getTag());
 
             if (mobEnchant != null) {
                 TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
 
-                tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).func_240701_a_(textformatting));
+                tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).func_240702_b_(" ").func_230529_a_(new TranslationTextComponent("enchantment.level." + level).func_240701_a_(textformatting)));
             }
         }
     }
