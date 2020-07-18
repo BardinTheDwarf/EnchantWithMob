@@ -4,7 +4,9 @@ import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
+import com.baguchan.enchantwithmob.registry.ModItems;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,6 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class MobEnchantUtils {
@@ -51,17 +54,52 @@ public class MobEnchantUtils {
         return compoundnbt != null && compoundnbt.contains("StoredMobEnchants");
     }
 
-    public static ListNBT getEnchantmentListForItem(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getTag();
-        return compoundnbt != null ? compoundnbt.getList("StoredMobEnchants", 10) : new ListNBT();
-    }
-
     public static ListNBT getEnchantmentListForNBT(CompoundNBT compoundnbt) {
         return compoundnbt != null ? compoundnbt.getList("StoredMobEnchants", 10) : new ListNBT();
     }
 
+    public static Map<MobEnchant, Integer> getEnchantments(ItemStack stack) {
+        ListNBT listnbt = getEnchantmentListForNBT(stack.getTag());
+        return func_226652_a_(listnbt);
+    }
+
+    public static void setEnchantments(Map<MobEnchant, Integer> enchMap, ItemStack stack) {
+        ListNBT listnbt = new ListNBT();
+
+        for (Map.Entry<MobEnchant, Integer> entry : enchMap.entrySet()) {
+            MobEnchant enchantment = entry.getKey();
+            if (enchantment != null) {
+                int i = entry.getValue();
+                CompoundNBT compoundnbt = new CompoundNBT();
+                compoundnbt.putString("MobEnchant", String.valueOf((Object) MobEnchants.getRegistry().getKey(enchantment)));
+                compoundnbt.putShort("EnchantLevel", (short) i);
+                listnbt.add(compoundnbt);
+                if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK) {
+                    addMobEnchantToItemStack(stack, enchantment, i);
+                }
+            }
+        }
+
+        if (listnbt.isEmpty()) {
+            stack.removeChildTag("StoredMobEnchants");
+        }
+    }
+
+    private static Map<MobEnchant, Integer> func_226652_a_(ListNBT p_226652_0_) {
+        Map<MobEnchant, Integer> map = Maps.newLinkedHashMap();
+
+        for (int i = 0; i < p_226652_0_.size(); ++i) {
+            CompoundNBT compoundnbt = p_226652_0_.getCompound(i);
+            MobEnchant mobEnchant = getEnchantFromString(compoundnbt.getString("MobEnchant"));
+            map.put(mobEnchant, compoundnbt.getInt("EnchantLevel"));
+
+        }
+
+        return map;
+    }
+
     public static void addMobEnchantToItemStack(ItemStack itemIn, MobEnchant mobenchant, int level) {
-        ListNBT listnbt = getEnchantmentListForItem(itemIn);
+        ListNBT listnbt = getEnchantmentListForNBT(itemIn.getTag());
 
         boolean flag = true;
         ResourceLocation resourcelocation = MobEnchants.getRegistry().getKey(mobenchant);
@@ -91,7 +129,7 @@ public class MobEnchantUtils {
     }
 
     public static void addMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
-        ListNBT listnbt = getEnchantmentListForItem(itemIn);
+        ListNBT listnbt = getEnchantmentListForNBT(itemIn.getTag());
         for (int i = 0; i < listnbt.size(); ++i) {
             CompoundNBT compoundnbt = listnbt.getCompound(i);
             capability.addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));

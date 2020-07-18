@@ -69,7 +69,7 @@ public class MobEnchantBookItem extends Item {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (MobEnchantUtils.hasMobEnchant(stack)) {
-            ListNBT listnbt = MobEnchantUtils.getEnchantmentListForItem(stack);
+            ListNBT listnbt = MobEnchantUtils.getEnchantmentListForNBT(stack.getTag());
 
             for (int i = 0; i < listnbt.size(); ++i) {
                 CompoundNBT compoundnbt = listnbt.getCompound(i);

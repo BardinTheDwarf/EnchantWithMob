@@ -52,6 +52,17 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 
     }
 
+    public final boolean isCompatibleWith(MobEnchant enchantmentIn) {
+        return this.canApplyTogether(enchantmentIn) && enchantmentIn.canApplyTogether(this);
+    }
+
+    /**
+     * Determines if the enchantment passed can be applyied together with this enchantment.
+     */
+    protected boolean canApplyTogether(MobEnchant ench) {
+        return this != ench;
+    }
+
     public static class Properties {
         private final Rarity enchantType;
         private final int level;

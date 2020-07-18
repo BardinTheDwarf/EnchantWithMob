@@ -5,14 +5,17 @@ import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.message.EnchantedMessage;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
+import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorld;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -20,6 +23,8 @@ import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
 public class CommonEventHandler {
@@ -43,7 +48,7 @@ public class CommonEventHandler {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
 
                 if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
-                    if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getDifficultyForLocation(livingEntity.func_233580_cy_()).getClampedAdditionalDifficulty() * 0.1F) {
+                    if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getDifficultyForLocation(livingEntity.func_233580_cy_()).getClampedAdditionalDifficulty() * 0.05F) {
                         if (!world.isRemote()) {
                             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                             {
@@ -142,5 +147,74 @@ public class CommonEventHandler {
             damage += (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
         }
         return damage;
+    }
+
+
+    @SubscribeEvent
+    public static void onAnvilUpdate(AnvilUpdateEvent event) {
+        ItemStack stack1 = event.getLeft();
+        ItemStack stack2 = event.getRight();
+
+        if (stack1.getItem() == ModItems.MOB_ENCHANT_BOOK && stack2.getItem() == ModItems.MOB_ENCHANT_BOOK) {
+            Map<MobEnchant, Integer> map = MobEnchantUtils.getEnchantments(stack1);
+
+            Map<MobEnchant, Integer> map1 = MobEnchantUtils.getEnchantments(stack2);
+            boolean flag2 = false;
+            boolean flag3 = false;
+
+            for (MobEnchant enchantment1 : map1.keySet()) {
+                if (enchantment1 != null) {
+                    int i2 = map.getOrDefault(enchantment1, 0);
+                    int j2 = map1.get(enchantment1);
+                    j2 = i2 == j2 ? j2 + 1 : Math.max(j2, i2);
+                    boolean flag1 = true;
+
+                    for (MobEnchant enchantment : map.keySet()) {
+                        if (enchantment != enchantment1 && !enchantment1.isCompatibleWith(enchantment)) {
+                            flag1 = false;
+                        }
+                    }
+
+                    if (!flag1) {
+                        flag3 = true;
+                    } else {
+                        flag2 = true;
+                        if (j2 > enchantment1.getMaxLevel()) {
+                            j2 = enchantment1.getMaxLevel();
+                        }
+
+                        map.put(enchantment1, j2);
+                        int k3 = 0;
+                        switch (enchantment1.getRarity()) {
+                            case COMMON:
+                                k3 = 1;
+                                break;
+                            case UNCOMMON:
+                                k3 = 2;
+                                break;
+                            case RARE:
+                                k3 = 4;
+                                break;
+                            case VERY_RARE:
+                                k3 = 8;
+                        }
+                    }
+                }
+            }
+            if (!stack1.isEmpty()) {
+                int k2 = stack1.getRepairCost();
+                if (!stack2.isEmpty() && k2 < stack2.getRepairCost()) {
+                    k2 = stack2.getRepairCost();
+                }
+
+                ItemStack stack3 = new ItemStack(stack1.getItem());
+
+                MobEnchantUtils.setEnchantments(map, stack3);
+                stack3.setRepairCost(4 + k2);
+                event.setOutput(stack3);
+                event.setCost(4 + k2);
+                event.setMaterialCost(1);
+            }
+        }
     }
 }
