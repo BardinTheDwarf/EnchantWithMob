@@ -10,6 +10,6 @@ public class ProtectionMobEnchant extends MobEnchant {
     }
 
     public int getMaxEnchantability(int enchantmentLevel) {
-        return this.getMinEnchantability(enchantmentLevel) + 12;
+        return this.getMinEnchantability(enchantmentLevel) + 10;
     }
 }
