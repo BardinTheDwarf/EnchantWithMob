@@ -48,7 +48,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
     }
 
 
-    public void tick(LivingEntity entity) {
+    public void tick(LivingEntity entity, int level) {
 
     }
 

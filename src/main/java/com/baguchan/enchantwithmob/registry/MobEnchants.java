@@ -2,6 +2,7 @@ package com.baguchan.enchantwithmob.registry;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
+import com.baguchan.enchantwithmob.mobenchant.SpeedyMobEnchant;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,7 +13,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
     public static final MobEnchant PROTECTION = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 4));
-    public static final MobEnchant SPEEDY = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 5));
+    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 5));
     public static final MobEnchant STRONG = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
 
 
