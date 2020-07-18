@@ -17,4 +17,12 @@ public class SpeedyMobEnchant extends MobEnchant {
             entity.addPotionEffect(new EffectInstance(Effects.SPEED, 600, level, true, false));
         }
     }
+
+    public int getMinEnchantability(int enchantmentLevel) {
+        return 10 + (enchantmentLevel - 1) * 10;
+    }
+
+    public int getMaxEnchantability(int enchantmentLevel) {
+        return this.getMinEnchantability(enchantmentLevel) + 20;
+    }
 }
