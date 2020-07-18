@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob;
 
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
+import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.message.EnchantedMessage;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -81,6 +82,15 @@ public class CommonEventHandler {
                 });
             }
         }
+
+        if (!livingEntity.world.isRemote) {
+            livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+            {
+                for (MobEnchantHandler enchantHandler : cap.getMobEnchants()) {
+                    enchantHandler.getMobEnchant().tick(livingEntity, enchantHandler.getEnchantLevel());
+                }
+            });
+        }
     }
 
     @SubscribeEvent
@@ -90,7 +100,7 @@ public class CommonEventHandler {
         livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
             if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.PROTECTION)) {
-                event.setAmount(event.getAmount() * 0.75F);
+                event.setAmount(getDamageReduction(event.getAmount(), cap));
             }
         });
 
