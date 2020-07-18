@@ -2,9 +2,7 @@
   "item.enchantwithmob.enchanter_spawn_egg": "Enchanter Spawn Egg",
   "item.enchantwithmob.mob_enchant_book": "Mob Enchant Book",
   "entity.enchantwithmob.enchanter": "Enchanter",
-  "mobenchant.enchantwithmob.name.enchantwithmob.protection.1": "Protection",
-  "mobenchant.enchantwithmob.name.enchantwithmob.protection.2": "Protection",
-  "mobenchant.enchantwithmob.name.enchantwithmob.protection.3": "Protection",
+  "mobenchant.enchantwithmob.name.enchantwithmob.protection": "Protection",
   "mobenchant.enchantwithmob.name.enchantwithmob.strong": "Strong",
   "mobenchant.enchantwithmob.name.enchantwithmob.speedy": "Speedy"
 }

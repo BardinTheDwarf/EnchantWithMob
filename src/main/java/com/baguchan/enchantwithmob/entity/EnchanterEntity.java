@@ -1,7 +1,6 @@
 package com.baguchan.enchantwithmob.entity;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
-import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.entity.*;
@@ -146,9 +145,9 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.dropSpecialItems(source, looting, recentlyHitIn);
 
         if (this.rand.nextFloat() < 0.125F + 0.025F * looting) {
-            ItemStack itemStack = MobEnchantUtils.addMobEnchantToItemStack(new ItemStack(ModItems.MOB_ENCHANT_BOOK), MobEnchants.byId(MobEnchants.getRegistry().getValues().size()));
+            ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
-            this.entityDropItem(itemStack);
+            this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 10, false));
         }
     }
 
@@ -255,7 +254,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             if (entity != null && entity.isAlive()) {
                 entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
-                    cap.setMobEnchant(entity, MobEnchants.byId(MobEnchants.getRegistry().getValues().size()), 1);
+                    MobEnchantUtils.addRandomEnchantmentToEntity(entity, cap, entity.getRNG(), 10, false);
                 });
             }
         }

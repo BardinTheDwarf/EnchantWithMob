@@ -10,6 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
@@ -22,23 +24,19 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class MobEnchantBook extends Item {
-    public MobEnchantBook(Properties group) {
+public class MobEnchantBookItem extends Item {
+    public MobEnchantBookItem(Properties group) {
         super(group);
     }
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        if (stack.hasTag()) {
+        if (MobEnchantUtils.hasMobEnchant(stack)) {
             target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                MobEnchant mobEnchant = MobEnchantUtils.getEnchantTypeFromNBT(stack.getTag());
-                int level = MobEnchantUtils.getEnchantLevelFromNBT(stack.getTag());
-
-                if (mobEnchant != null) {
-                    cap.setMobEnchant(target, mobEnchant, level);
+                if (!cap.hasEnchant()) {
+                    MobEnchantUtils.addMobEnchantToEntity(stack, target, cap);
                 }
-
             });
             playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
@@ -54,24 +52,36 @@ public class MobEnchantBook extends Item {
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
         if (this.isInGroup(group)) {
             for (MobEnchant enchant : MobEnchants.getRegistry()) {
-                items.add(MobEnchantUtils.addMobEnchantToItemStack(new ItemStack(this), enchant, enchant.getMaxLevel()));
-
+                ItemStack stack = new ItemStack(this);
+                MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
+                items.add(stack);
             }
         }
 
+    }
+
+    public static ListNBT getEnchantmentList(ItemStack stack) {
+        CompoundNBT compoundnbt = stack.getTag();
+        return compoundnbt != null ? compoundnbt.getList("StoredEnchantments", 10) : new ListNBT();
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         if (MobEnchantUtils.hasMobEnchant(stack)) {
-            MobEnchant mobEnchant = MobEnchantUtils.getEnchantTypeFromNBT(stack.getTag());
-            int level = MobEnchantUtils.getEnchantLevelFromNBT(stack.getTag());
+            ListNBT listnbt = MobEnchantUtils.getEnchantmentListForItem(stack);
 
-            if (mobEnchant != null) {
-                TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
+            for (int i = 0; i < listnbt.size(); ++i) {
+                CompoundNBT compoundnbt = listnbt.getCompound(i);
 
-                tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).func_240702_b_(" ").func_230529_a_(new TranslationTextComponent("enchantment.level." + level).func_240701_a_(textformatting)));
+                MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
+                int level = MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt);
+
+                if (mobEnchant != null) {
+                    TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
+
+                    tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).func_240701_a_(textformatting).func_240702_b_(" ").func_230529_a_(new TranslationTextComponent("enchantment.level." + level).func_240701_a_(textformatting)));
+                }
             }
         }
     }

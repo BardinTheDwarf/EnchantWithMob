@@ -1,7 +1,7 @@
 package com.baguchan.enchantwithmob.registry;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
-import com.baguchan.enchantwithmob.item.MobEnchantBook;
+import com.baguchan.enchantwithmob.item.MobEnchantBookItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModItems {
-    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBook((new Item.Properties()).maxStackSize(1).maxDamage(5).group(ItemGroup.MISC));
+    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBookItem((new Item.Properties()).maxStackSize(1).maxDamage(5).group(ItemGroup.MISC));
     public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).group(ItemGroup.MISC));
 
     public static void register(RegistryEvent.Register<Item> registry, Item item, String id) {

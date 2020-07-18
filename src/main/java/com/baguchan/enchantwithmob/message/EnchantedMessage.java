@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.message;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
+import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.client.Minecraft;
@@ -15,26 +16,38 @@ import java.util.function.Supplier;
 public class EnchantedMessage {
     private int entityId;
     private MobEnchant enchantType;
+    private int level;
 
-    public EnchantedMessage(Entity entity, MobEnchant enchantType) {
+    public EnchantedMessage(Entity entity, MobEnchantHandler enchantType) {
         this.entityId = entity.getEntityId();
-        this.enchantType = enchantType;
+        this.enchantType = enchantType.getMobEnchant();
+        this.level = enchantType.getEnchantLevel();
     }
 
-    public EnchantedMessage(int entityId, MobEnchant enchantType) {
-        this.entityId = entityId;
+    public EnchantedMessage(int id, MobEnchantHandler enchantType) {
+        this.entityId = id;
+        this.enchantType = enchantType.getMobEnchant();
+        this.level = enchantType.getEnchantLevel();
+    }
+
+    public EnchantedMessage(Entity entity, MobEnchant enchantType, int level) {
+        this.entityId = entity.getEntityId();
         this.enchantType = enchantType;
+        this.level = level;
     }
 
     public void serialize(PacketBuffer buffer) {
         buffer.writeInt(this.entityId);
-        buffer.writeString(this.enchantType.getRegistryName().toString());
+        buffer.writeString(this.enchantType.toString());
+        buffer.writeInt(this.level);
     }
 
     public static EnchantedMessage deserialize(PacketBuffer buffer) {
         int entityId = buffer.readInt();
         MobEnchant enchantType = MobEnchantUtils.getEnchantFromString(buffer.readString());
-        return new EnchantedMessage(entityId, enchantType);
+        int level = buffer.readInt();
+
+        return new EnchantedMessage(entityId, new MobEnchantHandler(enchantType, level));
     }
 
     public static boolean handle(EnchantedMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -44,7 +57,10 @@ public class EnchantedMessage {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.world.getEntityByID(message.entityId);
                 if (entity != null && entity instanceof LivingEntity) {
-                    entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap -> enchantCap.setMobEnchant((LivingEntity) entity, message.enchantType));
+                    entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
+                    {
+                        enchantCap.addMobEnchant((LivingEntity) entity, message.enchantType, message.level);
+                    });
                 }
             });
         }

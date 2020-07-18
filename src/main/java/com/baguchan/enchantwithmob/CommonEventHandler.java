@@ -3,6 +3,7 @@ package com.baguchan.enchantwithmob;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.message.EnchantedMessage;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
+import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
@@ -46,11 +47,11 @@ public class CommonEventHandler {
                             {
                                 switch (world.getDifficulty()) {
                                     case EASY:
-                                        cap.setMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 1 + world.getRandom().nextInt(2));
+                                        cap.addMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 1 + world.getRandom().nextInt(2));
                                     case NORMAL:
-                                        cap.setMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 1 + world.getRandom().nextInt(4));
+                                        cap.addMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 1 + world.getRandom().nextInt(4));
                                     case HARD:
-                                        cap.setMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 2 + world.getRandom().nextInt(4));
+                                        cap.addMobEnchant(livingEntity, MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size())), 2 + world.getRandom().nextInt(4));
                                 }
                             });
                         }
@@ -72,8 +73,10 @@ public class CommonEventHandler {
                 {
                     //Sync Client Enchant
                     if (cap.hasEnchant()) {
-                        EnchantedMessage message = new EnchantedMessage(livingEntity, cap.getMobEnchant());
-                        EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
+                        for (int i = 0; i < cap.getMobEnchants().size(); i++) {
+                            EnchantedMessage message = new EnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
+                            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
+                        }
                     }
                 });
             }
@@ -86,7 +89,7 @@ public class CommonEventHandler {
 
         livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
-            if (cap.hasEnchant() && cap.getMobEnchant() == MobEnchants.PROTECTION) {
+            if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.PROTECTION)) {
                 event.setAmount(event.getAmount() * 0.75F);
             }
         });
@@ -96,7 +99,7 @@ public class CommonEventHandler {
 
             attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                if (cap.hasEnchant() && cap.getMobEnchant() == MobEnchants.STRONG) {
+                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
                     event.setAmount(getDamageAddition(event.getAmount(), cap));
                 }
             });
@@ -104,7 +107,7 @@ public class CommonEventHandler {
     }
 
     public static float getDamageReduction(float damage, MobEnchantCapability cap) {
-        int i = cap.getEnchantLevel();
+        int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.PROTECTION);
         if (i > 0) {
             damage -= (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
         }
@@ -112,7 +115,7 @@ public class CommonEventHandler {
     }
 
     public static float getDamageAddition(float damage, MobEnchantCapability cap) {
-        int i = cap.getEnchantLevel();
+        int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.STRONG);
         if (i > 0) {
             damage += (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
         }

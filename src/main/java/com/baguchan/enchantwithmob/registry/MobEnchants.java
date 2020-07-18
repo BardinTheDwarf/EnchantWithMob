@@ -11,9 +11,9 @@ import net.minecraftforge.registries.RegistryBuilder;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
-    public static final MobEnchant PROTECTION = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal, 4));
-    public static final MobEnchant SPEEDY = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal, 5));
-    public static final MobEnchant STRONG = new MobEnchant(new MobEnchant.Properties(MobEnchant.Type.normal, 3));
+    public static final MobEnchant PROTECTION = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 4));
+    public static final MobEnchant SPEEDY = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 5));
+    public static final MobEnchant STRONG = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
 
 
     private static ForgeRegistry<MobEnchant> registry;
