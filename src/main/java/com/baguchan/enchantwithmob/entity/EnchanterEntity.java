@@ -43,6 +43,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new EnchanterEntity.CastingSpellGoal());
+        this.goalSelector.addGoal(2, new AvoidTargetEntityGoal<>(this, MobEntity.class, 6.5F, 0.8D, 1.05D));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.8D, 1.15D));
         this.goalSelector.addGoal(3, new EnchanterEntity.SpellGoal());
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.8D));
@@ -277,6 +278,43 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
         protected SpellcastingIllagerEntity.SpellType getSpellType() {
             return SpellcastingIllagerEntity.SpellType.WOLOLO;
+        }
+    }
+
+    class AvoidTargetEntityGoal<T extends LivingEntity> extends net.minecraft.entity.ai.goal.AvoidEntityGoal<T> {
+        private final EnchanterEntity enchanter;
+
+        public AvoidTargetEntityGoal(EnchanterEntity enchanterIn, Class<T> entityClassToAvoidIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn) {
+            super(enchanterIn, entityClassToAvoidIn, avoidDistanceIn, farSpeedIn, nearSpeedIn);
+            this.enchanter = enchanterIn;
+        }
+
+        /**
+         * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+         * method as well.
+         */
+        public boolean shouldExecute() {
+            if (super.shouldExecute() && this.avoidTarget == this.enchanter.getAttackTarget()) {
+                return this.enchanter.getAttackTarget() != null;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * Execute a one shot task or start executing a continuous task
+         */
+        public void startExecuting() {
+            EnchanterEntity.this.setAttackTarget((LivingEntity) null);
+            super.startExecuting();
+        }
+
+        /**
+         * Keep ticking a continuous task that has already been started
+         */
+        public void tick() {
+            EnchanterEntity.this.setAttackTarget((LivingEntity) null);
+            super.tick();
         }
     }
 }
