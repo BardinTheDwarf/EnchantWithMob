@@ -268,7 +268,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         }
 
         protected int getCastingInterval() {
-            return 160;
+            return 600;
         }
 
         protected SoundEvent getSpellPrepareSound() {
