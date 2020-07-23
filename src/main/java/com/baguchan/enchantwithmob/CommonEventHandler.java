@@ -82,23 +82,28 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
+    public static void onEntityJoinEnchanted(LivingSpawnEvent event) {
+        LivingEntity livingEntity = (LivingEntity) event.getEntityLiving();
+
+
+        if (!livingEntity.world.isRemote) {
+            livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+            {
+                //Sync Client Enchant
+                if (cap.hasEnchant()) {
+                    for (int i = 0; i < cap.getMobEnchants().size(); i++) {
+                        EnchantedMessage message = new EnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
+                        EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
+                    }
+                }
+            });
+        }
+            
+    }
+
+    @SubscribeEvent
     public static void onUpdateEnchanted(LivingEvent.LivingUpdateEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
-
-        if (livingEntity.getEntityWorld().getGameTime() % 80 == 0) {
-            if (!livingEntity.world.isRemote) {
-                livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-                {
-                    //Sync Client Enchant
-                    if (cap.hasEnchant()) {
-                        for (int i = 0; i < cap.getMobEnchants().size(); i++) {
-                            EnchantedMessage message = new EnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
-                            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
-                        }
-                    }
-                });
-            }
-        }
 
         if (!livingEntity.world.isRemote) {
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
