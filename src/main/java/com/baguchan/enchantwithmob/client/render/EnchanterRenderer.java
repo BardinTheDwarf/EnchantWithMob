@@ -45,9 +45,9 @@ public class EnchanterRenderer<T extends EnchanterEntity> extends MobRenderer<T,
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-f + 90F));
             matrixStackIn.translate(-0.575D, 0.0D, 0.0D);
             matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(60.0F * bookAnimation));
-            this.bookModel.func_228247_a_(0.0F, MathHelper.clamp(bookAnimation, 0.0F, 0.1F), MathHelper.clamp(bookAnimation, 0.0F, 0.9F), bookAnimation);
+            this.bookModel.setBookState(0.0F, MathHelper.clamp(bookAnimation, 0.0F, 0.1F), MathHelper.clamp(bookAnimation, 0.0F, 0.9F), bookAnimation);
             IVertexBuilder ivertexbuilder = EnchantmentTableTileEntityRenderer.TEXTURE_BOOK.getBuffer(bufferIn, RenderType::getEntitySolid);
-            this.bookModel.func_228249_b_(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            this.bookModel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
             matrixStackIn.pop();
         }
     }
