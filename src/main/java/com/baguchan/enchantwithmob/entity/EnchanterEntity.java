@@ -60,6 +60,11 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.registerData();
     }
 
+    @Override
+    public void applyWaveBonus(int p_213660_1_, boolean p_213660_2_) {
+
+    }
+
     public static AttributeModifierMap.MutableAttribute getAttributeMap() {
         return MonsterEntity.func_234295_eP_().func_233815_a_(Attributes.MOVEMENT_SPEED, (double) 0.3F).func_233815_a_(Attributes.MAX_HEALTH, 24.0D).func_233815_a_(Attributes.FOLLOW_RANGE, 24.0D);
     }
@@ -136,10 +141,6 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         return enchantTarget;
     }
 
-    @Override
-    public void func_213660_a(int p_213660_1_, boolean p_213660_2_) {
-
-    }
 
     @Override
     protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
