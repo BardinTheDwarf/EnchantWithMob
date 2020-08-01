@@ -62,7 +62,7 @@ public class MobEnchantBookItem extends Item {
 
     public static ListNBT getEnchantmentList(ItemStack stack) {
         CompoundNBT compoundnbt = stack.getTag();
-        return compoundnbt != null ? compoundnbt.getList("StoredEnchantments", 10) : new ListNBT();
+        return compoundnbt != null ? compoundnbt.getList(MobEnchantUtils.TAG_STORED_MOBENCHANTS, 10) : new ListNBT();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class MobEnchantBookItem extends Item {
                 if (mobEnchant != null) {
                     TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
 
-                    tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).func_240701_a_(textformatting).func_240702_b_(" ").func_230529_a_(new TranslationTextComponent("enchantment.level." + level).func_240701_a_(textformatting)));
+                    tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).mergeStyle(textformatting).appendString(" ").append(new TranslationTextComponent("enchantment.level." + level).mergeStyle(textformatting)));
                 }
             }
         }

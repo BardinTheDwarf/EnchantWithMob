@@ -45,8 +45,8 @@ public class MobEnchants {
         return registry;
     }
 
-    public static int getId(MobEnchant biome) {
-        return registry.getID(biome);
+    public static int getId(MobEnchant enchant) {
+        return registry.getID(enchant);
     }
 
     public static MobEnchant byId(int id) {

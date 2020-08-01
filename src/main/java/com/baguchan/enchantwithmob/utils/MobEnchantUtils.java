@@ -23,10 +23,14 @@ import java.util.Map;
 import java.util.Random;
 
 public class MobEnchantUtils {
+    public static final String TAG_MOBENCHANT = "MobEnchant";
+    public static final String TAG_ENCHANT_LEVEL = "EnchantLevel";
+    public static final String TAG_STORED_MOBENCHANTS = "StoredMobEnchants";
+
     @Nullable
     public static MobEnchant getEnchantFromNBT(@Nullable CompoundNBT tag) {
-        if (tag != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryCreate(tag.getString("MobEnchant")))) {
-            return MobEnchants.getRegistry().getValue(ResourceLocation.tryCreate(tag.getString("MobEnchant")));
+        if (tag != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryCreate(tag.getString(TAG_MOBENCHANT)))) {
+            return MobEnchants.getRegistry().getValue(ResourceLocation.tryCreate(tag.getString(TAG_MOBENCHANT)));
         } else {
             return null;
         }
@@ -34,7 +38,7 @@ public class MobEnchantUtils {
 
     public static int getEnchantLevelFromNBT(@Nullable CompoundNBT tag) {
         if (tag != null) {
-            return tag.getInt("EnchantLevel");
+            return tag.getInt(TAG_ENCHANT_LEVEL);
         } else {
             return 0;
         }
@@ -51,11 +55,11 @@ public class MobEnchantUtils {
 
     public static boolean hasMobEnchant(ItemStack stack) {
         CompoundNBT compoundnbt = stack.getTag();
-        return compoundnbt != null && compoundnbt.contains("StoredMobEnchants");
+        return compoundnbt != null && compoundnbt.contains(TAG_STORED_MOBENCHANTS);
     }
 
     public static ListNBT getEnchantmentListForNBT(CompoundNBT compoundnbt) {
-        return compoundnbt != null ? compoundnbt.getList("StoredMobEnchants", 10) : new ListNBT();
+        return compoundnbt != null ? compoundnbt.getList(TAG_STORED_MOBENCHANTS, 10) : new ListNBT();
     }
 
     public static Map<MobEnchant, Integer> getEnchantments(ItemStack stack) {
@@ -71,8 +75,8 @@ public class MobEnchantUtils {
             if (enchantment != null) {
                 int i = entry.getValue();
                 CompoundNBT compoundnbt = new CompoundNBT();
-                compoundnbt.putString("MobEnchant", String.valueOf((Object) MobEnchants.getRegistry().getKey(enchantment)));
-                compoundnbt.putShort("EnchantLevel", (short) i);
+                compoundnbt.putString(TAG_MOBENCHANT, String.valueOf((Object) MobEnchants.getRegistry().getKey(enchantment)));
+                compoundnbt.putShort(TAG_ENCHANT_LEVEL, (short) i);
                 listnbt.add(compoundnbt);
                 if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK) {
                     addMobEnchantToItemStack(stack, enchantment, i);
@@ -81,7 +85,7 @@ public class MobEnchantUtils {
         }
 
         if (listnbt.isEmpty()) {
-            stack.removeChildTag("StoredMobEnchants");
+            stack.removeChildTag(TAG_STORED_MOBENCHANTS);
         }
     }
 
@@ -90,14 +94,15 @@ public class MobEnchantUtils {
 
         for (int i = 0; i < p_226652_0_.size(); ++i) {
             CompoundNBT compoundnbt = p_226652_0_.getCompound(i);
-            MobEnchant mobEnchant = getEnchantFromString(compoundnbt.getString("MobEnchant"));
-            map.put(mobEnchant, compoundnbt.getInt("EnchantLevel"));
+            MobEnchant mobEnchant = getEnchantFromString(compoundnbt.getString(TAG_MOBENCHANT));
+            map.put(mobEnchant, compoundnbt.getInt(TAG_ENCHANT_LEVEL));
 
         }
 
         return map;
     }
 
+    //add MobEnchantToItemstack (example,this method used to MobEnchantBook)
     public static void addMobEnchantToItemStack(ItemStack itemIn, MobEnchant mobenchant, int level) {
         ListNBT listnbt = getEnchantmentListForNBT(itemIn.getTag());
 
@@ -109,8 +114,8 @@ public class MobEnchantUtils {
             CompoundNBT compoundnbt = listnbt.getCompound(i);
             ResourceLocation resourcelocation1 = ResourceLocation.tryCreate(compoundnbt.getString("MobEnchant"));
             if (resourcelocation1 != null && resourcelocation1.equals(resourcelocation)) {
-                if (compoundnbt.getInt("EnchantLevel") < level) {
-                    compoundnbt.putInt("EnchantLevel", level);
+                if (compoundnbt.getInt(TAG_ENCHANT_LEVEL) < level) {
+                    compoundnbt.putInt(TAG_ENCHANT_LEVEL, level);
                 }
 
                 flag = false;
@@ -120,12 +125,12 @@ public class MobEnchantUtils {
 
         if (flag) {
             CompoundNBT compoundnbt1 = new CompoundNBT();
-            compoundnbt1.putString("MobEnchant", String.valueOf((Object) resourcelocation));
-            compoundnbt1.putInt("EnchantLevel", level);
+            compoundnbt1.putString(TAG_MOBENCHANT, String.valueOf((Object) resourcelocation));
+            compoundnbt1.putInt(TAG_ENCHANT_LEVEL, level);
             listnbt.add(compoundnbt1);
         }
 
-        itemIn.getTag().put("StoredMobEnchants", listnbt);
+        itemIn.getTag().put(TAG_STORED_MOBENCHANTS, listnbt);
     }
 
     public static void addMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
