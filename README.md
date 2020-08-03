@@ -1,4 +1,4 @@
-# EnchantWithMob[![](http://cf.way2muchnoise.eu/versions/enchantwithmob.svg)](https://www.curseforge.com/minecraft/mc-mods/enchantwithmob)[![](http://cf.way2muchnoise.eu/short_enchantwithmob_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/enchantwithmob/files)
+# EnchantWithMob[![](http://cf.way2muchnoise.eu/versions/enchant-with-mob.svg)](https://www.curseforge.com/minecraft/mc-mods/enchant-with-mob)[![](http://cf.way2muchnoise.eu/short_enchant-with-mob_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/enchant-with-mob/files)
 
 ## Overview
 This mod is add Enchant (with Mob) from Minecraft Dungeons
