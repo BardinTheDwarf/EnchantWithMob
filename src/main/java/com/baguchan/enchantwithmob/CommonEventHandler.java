@@ -10,6 +10,7 @@ import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -46,32 +47,33 @@ public class CommonEventHandler {
 
             if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
+                if (!(livingEntity instanceof AnimalEntity) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
+                    if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
+                        if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getDifficultyForLocation(livingEntity.func_233580_cy_()).getClampedAdditionalDifficulty() * 0.05F) {
+                            if (!world.isRemote()) {
+                                livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+                                {
+                                    MobEnchant mobEnchant = MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size()));
+                                    int i = 0;
+                                    switch (world.getDifficulty()) {
+                                        case EASY:
+                                            i = MathHelper.clamp(1 + world.getRandom().nextInt(2), 0, mobEnchant.getMaxLevel());
 
-                if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
-                    if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getDifficultyForLocation(livingEntity.func_233580_cy_()).getClampedAdditionalDifficulty() * 0.05F) {
-                        if (!world.isRemote()) {
-                            livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-                            {
-                                MobEnchant mobEnchant = MobEnchants.byId(world.getRandom().nextInt(MobEnchants.getRegistry().getValues().size()));
-                                int i = 0;
-                                switch (world.getDifficulty()) {
-                                    case EASY:
-                                        i = MathHelper.clamp(1 + world.getRandom().nextInt(2), 0, mobEnchant.getMaxLevel());
+                                            cap.addMobEnchant(livingEntity, mobEnchant, i);
+                                            break;
+                                        case NORMAL:
+                                            i = MathHelper.clamp(1 + world.getRandom().nextInt(4), 0, mobEnchant.getMaxLevel());
 
-                                        cap.addMobEnchant(livingEntity, mobEnchant, i);
-                                        break;
-                                    case NORMAL:
-                                        i = MathHelper.clamp(1 + world.getRandom().nextInt(4), 0, mobEnchant.getMaxLevel());
+                                            cap.addMobEnchant(livingEntity, mobEnchant, i);
+                                            break;
+                                        case HARD:
+                                            i = MathHelper.clamp(2 + world.getRandom().nextInt(4), 0, mobEnchant.getMaxLevel());
 
-                                        cap.addMobEnchant(livingEntity, mobEnchant, i);
-                                        break;
-                                    case HARD:
-                                        i = MathHelper.clamp(2 + world.getRandom().nextInt(4), 0, mobEnchant.getMaxLevel());
-
-                                        cap.addMobEnchant(livingEntity, mobEnchant, i);
-                                        break;
-                                }
-                            });
+                                            cap.addMobEnchant(livingEntity, mobEnchant, i);
+                                            break;
+                                    }
+                                });
+                            }
                         }
                     }
                 }
