@@ -137,7 +137,11 @@ public class CommonEventHandler {
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
-                    attaker.attackEntityFrom(DamageSource.causeThornsDamage(livingEntity), getThornDamage(event.getAmount(), cap));
+                    int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.THORN);
+
+                    if (i * 0.1F < livingEntity.getRNG().nextFloat()) {
+                        attaker.attackEntityFrom(DamageSource.causeThornsDamage(livingEntity), getThornDamage(event.getAmount(), cap));
+                    }
                 }
             });
         }
