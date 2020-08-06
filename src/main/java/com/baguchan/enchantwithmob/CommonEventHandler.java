@@ -13,6 +13,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorld;
@@ -121,13 +122,6 @@ public class CommonEventHandler {
     public static void onEntityHurt(LivingHurtEvent event) {
         LivingEntity livingEntity = event.getEntityLiving();
 
-        livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-        {
-            if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.PROTECTION)) {
-                event.setAmount(getDamageReduction(event.getAmount(), cap));
-            }
-        });
-
         if (event.getSource().getTrueSource() instanceof LivingEntity) {
             LivingEntity attaker = (LivingEntity) event.getSource().getTrueSource();
 
@@ -136,14 +130,38 @@ public class CommonEventHandler {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
                     event.setAmount(getDamageAddition(event.getAmount(), cap));
                 }
+
+
+            });
+
+            livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+            {
+                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
+                    attaker.attackEntityFrom(DamageSource.causeThornsDamage(livingEntity), getThornDamage(event.getAmount(), cap));
+                }
             });
         }
+
+        livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+        {
+            if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.PROTECTION)) {
+                event.setAmount(getDamageReduction(event.getAmount(), cap));
+            }
+        });
     }
 
     public static float getDamageReduction(float damage, MobEnchantCapability cap) {
         int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.PROTECTION);
         if (i > 0) {
             damage -= (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
+        }
+        return damage;
+    }
+
+    public static float getThornDamage(float damage, MobEnchantCapability cap) {
+        int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.THORN);
+        if (i > 0) {
+            damage = (float) MathHelper.floor(damage * (double) ((float) i * 0.15F));
         }
         return damage;
     }

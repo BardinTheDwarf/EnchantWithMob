@@ -15,9 +15,9 @@ import net.minecraftforge.registries.RegistryBuilder;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
     public static final MobEnchant PROTECTION = new ProtectionMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 4));
-    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.UNCOMMON, 2));
+    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 2));
     public static final MobEnchant STRONG = new StrongMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
-
+    public static final MobEnchant THORN = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3));
 
     private static ForgeRegistry<MobEnchant> registry;
 
@@ -35,7 +35,8 @@ public class MobEnchants {
     public static void onRegisterEnchant(RegistryEvent.Register<MobEnchant> event) {
         event.getRegistry().registerAll(PROTECTION.setRegistryName("protection"),
                 SPEEDY.setRegistryName("speedy"),
-                STRONG.setRegistryName("strong"));
+                STRONG.setRegistryName("strong"),
+                THORN.setRegistryName("thorn"));
     }
 
     public static ForgeRegistry<MobEnchant> getRegistry() {
