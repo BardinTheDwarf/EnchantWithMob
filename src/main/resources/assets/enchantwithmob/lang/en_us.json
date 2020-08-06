@@ -4,5 +4,8 @@
   "entity.enchantwithmob.enchanter": "Enchanter",
   "mobenchant.enchantwithmob.name.enchantwithmob.protection": "Protection",
   "mobenchant.enchantwithmob.name.enchantwithmob.strong": "Strong",
-  "mobenchant.enchantwithmob.name.enchantwithmob.speedy": "Speedy"
+  "mobenchant.enchantwithmob.name.enchantwithmob.speedy": "Speedy",
+  "mobenchant.enchantwithmob.name.enchantwithmob.thorn": "Thorn",
+  "advancements.adventure.hidden_books.title": "Hidden Books",
+  "advancements.adventure.hidden_books.description": "Get the Mob Enchantment Book"
 }
