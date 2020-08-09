@@ -128,7 +128,12 @@ public class CommonEventHandler {
             attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
-                    event.setAmount(getDamageAddition(event.getAmount(), cap));
+                    //make snowman stronger
+                    if (event.getAmount() == 0) {
+                        event.setAmount(getDamageAddition(1, cap));
+                    } else {
+                        event.setAmount(getDamageAddition(event.getAmount(), cap));
+                    }
                 }
 
 
