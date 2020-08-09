@@ -1,8 +1,10 @@
 {
   "item.enchantwithmob.enchanter_spawn_egg": "Ovo de Gerador de Encantador",
-  "item.enchantwithmob.mob_enchant_book": "Livro Encantador de Mob",
+  "item.enchantwithmob.mob_enchant_book": "Livro de Encantamentos de Mobs",
   "entity.enchantwithmob.enchanter": "Encantador",
   "mobenchant.enchantwithmob.name.enchantwithmob.protection": "Proteção",
   "mobenchant.enchantwithmob.name.enchantwithmob.strong": "Força",
   "mobenchant.enchantwithmob.name.enchantwithmob.speedy": "Velocidade"
-}
+  "mobenchant.enchantwithmob.name.enchantwithmob.thorn": "Espinhos",
+  "advancements.adventure.hidden_books.title": "Livros Ocultos",
+  "advancements.adventure.hidden_books.description": "Obtenha o Livro de Encantamentos de Mobs"
