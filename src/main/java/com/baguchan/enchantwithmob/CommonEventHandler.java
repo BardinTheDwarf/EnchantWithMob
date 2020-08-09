@@ -176,9 +176,9 @@ public class CommonEventHandler {
     }
 
     public static float getDamageAddition(float damage, MobEnchantCapability cap) {
-        int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.STRONG);
-        if (i > 0) {
-            damage += (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
+        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.STRONG);
+        if (level > 0) {
+            damage += 1.0F + (float) Math.max(0, level - 1) * 0.5F;
         }
         return damage;
     }
