@@ -1,9 +1,19 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
+import com.google.common.collect.Maps;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.AttributeModifierManager;
+import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
+import net.minecraft.util.Util;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.Map;
+import java.util.UUID;
+
 public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
+    private final Map<Attribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
     protected final Rarity enchantType;
     private final int level;
     private int minlevel = 1;
@@ -62,6 +72,42 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
     protected boolean canApplyTogether(MobEnchant ench) {
         return this != ench;
     }
+
+    public MobEnchant addAttributesModifier(Attribute attributeIn, String uuid, double amount, AttributeModifier.Operation operation) {
+        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), Util.makeTranslationKey("mobenchant", this.getRegistryName()), amount, operation);
+        this.attributeModifierMap.put(attributeIn, attributemodifier);
+        return this;
+    }
+
+    public Map<Attribute, AttributeModifier> getAttributeModifierMap() {
+        return this.attributeModifierMap;
+    }
+
+    public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn, int amplifier) {
+        for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+            ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.createInstanceIfAbsent(entry.getKey());
+            if (modifiableattributeinstance != null) {
+                modifiableattributeinstance.removeModifier(entry.getValue());
+            }
+        }
+
+    }
+
+    public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn, int amplifier) {
+        for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+            ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.createInstanceIfAbsent(entry.getKey());
+            if (modifiableattributeinstance != null) {
+                AttributeModifier attributemodifier = entry.getValue();
+                modifiableattributeinstance.removeModifier(attributemodifier);
+                modifiableattributeinstance.func_233769_c_(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
+            }
+        }
+    }
+
+    public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
+        return modifier.getAmount() * (double) (amplifier);
+    }
+
 
     public static class Properties {
         private final Rarity enchantType;

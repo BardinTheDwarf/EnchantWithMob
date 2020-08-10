@@ -5,6 +5,8 @@ import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.mobenchant.ProtectionMobEnchant;
 import com.baguchan.enchantwithmob.mobenchant.SpeedyMobEnchant;
 import com.baguchan.enchantwithmob.mobenchant.StrongMobEnchant;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,7 +17,7 @@ import net.minecraftforge.registries.RegistryBuilder;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
     public static final MobEnchant PROTECTION = new ProtectionMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 4));
-    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 2));
+    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 2)).addAttributesModifier(Attributes.MOVEMENT_SPEED, "91AEAA56-376B-4498-935B-2F7F68070635", (double) 0.1F, AttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final MobEnchant STRONG = new StrongMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
     public static final MobEnchant THORN = new MobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3));
 

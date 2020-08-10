@@ -1,7 +1,8 @@
 package com.baguchan.enchantwithmob.capability;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
-import com.baguchan.enchantwithmob.message.EnchantedMessage;
+import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
+import com.baguchan.enchantwithmob.message.RemoveMobEnchantMessage;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
@@ -22,13 +23,56 @@ import java.util.List;
 public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
     public List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
 
+
+    /*
+     * add Enchant
+     */
     public void addMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int enchantLevel) {
 
         this.mobEnchants.add(new MobEnchantHandler(mobEnchant, enchantLevel));
+        this.onNewEnchantEffect(entity, mobEnchant, enchantLevel);
         //Sync Client Enchant
         if (!entity.world.isRemote) {
-            EnchantedMessage message = new EnchantedMessage(entity, mobEnchant, enchantLevel);
+            MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
             EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+        }
+    }
+
+    /*
+     * Remove Enchant
+     */
+    public void removeMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int enchantLevel) {
+
+        this.mobEnchants.remove(mobEnchant);
+        this.onRemoveEnchantEffect(entity, mobEnchant, enchantLevel);
+        //Sync Client Enchant
+        if (!entity.world.isRemote) {
+            RemoveMobEnchantMessage message = new RemoveMobEnchantMessage(entity, mobEnchant, enchantLevel);
+            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+        }
+    }
+
+    /*
+     * Add Enchant Attribute
+     */
+    protected void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
+        if (!entity.world.isRemote) {
+            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributeManager(), enchantLevel);
+        }
+    }
+
+    protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
+        if (!entity.world.isRemote) {
+            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributeManager(), enchantLevel);
+        }
+    }
+
+    /*
+     * Remove Enchant Attribute effect
+     */
+    protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
+        if (!entity.world.isRemote) {
+            enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributeManager(), enchantLevel);
         }
     }
 

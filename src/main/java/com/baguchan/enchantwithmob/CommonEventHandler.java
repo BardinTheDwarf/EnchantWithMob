@@ -2,7 +2,7 @@ package com.baguchan.enchantwithmob;
 
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
-import com.baguchan.enchantwithmob.message.EnchantedMessage;
+import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
@@ -95,7 +95,7 @@ public class CommonEventHandler {
                 //Sync Client Enchant
                 if (cap.hasEnchant()) {
                     for (int i = 0; i < cap.getMobEnchants().size(); i++) {
-                        EnchantedMessage message = new EnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
+                        MobEnchantedMessage message = new MobEnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
                         EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
                     }
                 }
@@ -144,7 +144,7 @@ public class CommonEventHandler {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
                     int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.THORN);
 
-                    if (i * 0.1F < livingEntity.getRNG().nextFloat()) {
+                    if (i * 0.05F < livingEntity.getRNG().nextFloat()) {
                         attaker.attackEntityFrom(DamageSource.causeThornsDamage(livingEntity), getThornDamage(event.getAmount(), cap));
                     }
                 }

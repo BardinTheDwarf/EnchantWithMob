@@ -149,7 +149,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         if (this.rand.nextFloat() < 0.125F + 0.025F * looting) {
             ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
-            this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 8, false));
+            this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 15, true));
         }
     }
 
@@ -256,7 +256,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             if (entity != null && entity.isAlive()) {
                 entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
-                    MobEnchantUtils.addRandomEnchantmentToEntity(entity, cap, entity.getRNG(), 8, false);
+                    MobEnchantUtils.addRandomEnchantmentToEntity(entity, cap, entity.getRNG(), 12, false);
                 });
             }
         }
