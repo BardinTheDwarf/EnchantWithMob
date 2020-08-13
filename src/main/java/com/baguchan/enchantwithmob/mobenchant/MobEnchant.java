@@ -99,7 +99,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
             if (modifiableattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue();
                 modifiableattributeinstance.removeModifier(attributemodifier);
-                modifiableattributeinstance.func_233769_c_(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
+                modifiableattributeinstance.applyPersistentModifier(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
             }
         }
     }
