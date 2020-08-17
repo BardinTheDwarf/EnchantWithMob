@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -44,9 +45,8 @@ public class CommonEventHandler {
     public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
         if (event.getEntity() instanceof LivingEntity) {
             IWorld world = event.getWorld();
-
-
-            if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
+            
+            if (world.getWorldInfo().getGameRulesInstance().get(GameRules.MOB_GRIEFING).get() && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
                 if (!(livingEntity instanceof AnimalEntity) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
                     if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
