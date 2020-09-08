@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> extends LayerRenderer<T, M> {
-    private static final ResourceLocation LIGHTNING_TEXTURE = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+    private static final ResourceLocation ENCHANT_TEXTURE = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 
     public EnchantLayer(IEntityRenderer<T, M> p_i50947_1_) {
         super(p_i50947_1_);
@@ -42,7 +42,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
     }
 
     protected ResourceLocation func_225633_a_() {
-        return LIGHTNING_TEXTURE;
+        return ENCHANT_TEXTURE;
     }
 
     protected EntityModel<T> func_225635_b_() {

@@ -83,7 +83,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
         return this.attributeModifierMap;
     }
 
-    public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn, int amplifier) {
+    public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn) {
         for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
             ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.createInstanceIfAbsent(entry.getKey());
             if (modifiableattributeinstance != null) {

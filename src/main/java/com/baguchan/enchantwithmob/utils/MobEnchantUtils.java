@@ -27,6 +27,11 @@ public class MobEnchantUtils {
     public static final String TAG_ENCHANT_LEVEL = "EnchantLevel";
     public static final String TAG_STORED_MOBENCHANTS = "StoredMobEnchants";
 
+    /**
+     * get MobEnchant From NBT
+     *
+     * @param tag
+     */
     @Nullable
     public static MobEnchant getEnchantFromNBT(@Nullable CompoundNBT tag) {
         if (tag != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryCreate(tag.getString(TAG_MOBENCHANT)))) {
@@ -36,6 +41,11 @@ public class MobEnchantUtils {
         }
     }
 
+    /**
+     * get MobEnchant Level From NBT
+     *
+     * @param tag
+     */
     public static int getEnchantLevelFromNBT(@Nullable CompoundNBT tag) {
         if (tag != null) {
             return tag.getInt(TAG_ENCHANT_LEVEL);
@@ -44,6 +54,11 @@ public class MobEnchantUtils {
         }
     }
 
+    /**
+     * get MobEnchant From String
+     *
+     * @param id
+     */
     @Nullable
     public static MobEnchant getEnchantFromString(@Nullable String id) {
         if (id != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryCreate(id))) {
@@ -53,20 +68,41 @@ public class MobEnchantUtils {
         }
     }
 
+    /**
+     * check ItemStack has Mob Enchant
+     *
+     * @param stack
+     */
     public static boolean hasMobEnchant(ItemStack stack) {
         CompoundNBT compoundnbt = stack.getTag();
         return compoundnbt != null && compoundnbt.contains(TAG_STORED_MOBENCHANTS);
     }
 
+    /**
+     * check NBT has Mob Enchant
+     *
+     * @param compoundnbt
+     */
     public static ListNBT getEnchantmentListForNBT(CompoundNBT compoundnbt) {
         return compoundnbt != null ? compoundnbt.getList(TAG_STORED_MOBENCHANTS, 10) : new ListNBT();
     }
 
+    /**
+     * get Mob Enchantments From ItemStack
+     *
+     * @param stack
+     */
     public static Map<MobEnchant, Integer> getEnchantments(ItemStack stack) {
         ListNBT listnbt = getEnchantmentListForNBT(stack.getTag());
-        return func_226652_a_(listnbt);
+        return makeMobEnchantListFromListNBT(listnbt);
     }
 
+    /**
+     * set Mob Enchantments From ItemStack
+     *
+     * @param enchMap MobEnchants and those level map
+     * @param stack   MobEnchanted Item
+     */
     public static void setEnchantments(Map<MobEnchant, Integer> enchMap, ItemStack stack) {
         ListNBT listnbt = new ListNBT();
 
@@ -89,7 +125,7 @@ public class MobEnchantUtils {
         }
     }
 
-    private static Map<MobEnchant, Integer> func_226652_a_(ListNBT p_226652_0_) {
+    private static Map<MobEnchant, Integer> makeMobEnchantListFromListNBT(ListNBT p_226652_0_) {
         Map<MobEnchant, Integer> map = Maps.newLinkedHashMap();
 
         for (int i = 0; i < p_226652_0_.size(); ++i) {
@@ -146,6 +182,14 @@ public class MobEnchantUtils {
 
         for (MobEnchantmentData enchantmentdata : list) {
             capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+        }
+    }
+
+    public static void addRandomEnchantmentToEntityFromOwner(LivingEntity livingEntity, LivingEntity owner, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
+        List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+
+        for (MobEnchantmentData enchantmentdata : list) {
+            capability.addMobEnchantFromOwner(livingEntity, owner, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
         }
     }
 

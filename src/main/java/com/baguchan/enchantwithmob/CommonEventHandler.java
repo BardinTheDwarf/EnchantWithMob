@@ -45,7 +45,7 @@ public class CommonEventHandler {
     public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
         if (event.getEntity() instanceof LivingEntity) {
             IWorld world = event.getWorld();
-            
+
             if (world.getWorldInfo().getGameRulesInstance().get(GameRules.MOB_GRIEFING).get() && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
                 if (!(livingEntity instanceof AnimalEntity) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
@@ -101,7 +101,7 @@ public class CommonEventHandler {
                 }
             });
         }
-            
+
     }
 
     @SubscribeEvent
@@ -114,6 +114,7 @@ public class CommonEventHandler {
                 for (MobEnchantHandler enchantHandler : cap.getMobEnchants()) {
                     enchantHandler.getMobEnchant().tick(livingEntity, enchantHandler.getEnchantLevel());
                 }
+                
             });
         }
     }
