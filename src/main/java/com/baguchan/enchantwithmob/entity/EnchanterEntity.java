@@ -256,7 +256,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             if (entity != null && entity.isAlive()) {
                 entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
-                    MobEnchantUtils.addRandomEnchantmentToEntityFromOwner(entity, EnchanterEntity.this, cap, entity.getRNG(), 12, false);
+                    MobEnchantUtils.addRandomEnchantmentToEntity(entity, cap, entity.getRNG(), 12, false);
                 });
             }
         }

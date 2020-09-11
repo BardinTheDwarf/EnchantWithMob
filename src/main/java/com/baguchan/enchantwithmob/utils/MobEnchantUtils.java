@@ -185,14 +185,6 @@ public class MobEnchantUtils {
         }
     }
 
-    public static void addRandomEnchantmentToEntityFromOwner(LivingEntity livingEntity, LivingEntity owner, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
-        List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
-
-        for (MobEnchantmentData enchantmentdata : list) {
-            capability.addMobEnchantFromOwner(livingEntity, owner, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
-        }
-    }
-
     public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {
         List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
