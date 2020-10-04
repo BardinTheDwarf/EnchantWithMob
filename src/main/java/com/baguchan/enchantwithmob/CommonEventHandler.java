@@ -126,20 +126,6 @@ public class CommonEventHandler {
         if (event.getSource().getTrueSource() instanceof LivingEntity) {
             LivingEntity attaker = (LivingEntity) event.getSource().getTrueSource();
 
-            attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-            {
-                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
-                    //make snowman stronger
-                    if (event.getAmount() == 0) {
-                        event.setAmount(getDamageAddition(1, cap));
-                    } else {
-                        event.setAmount(getDamageAddition(event.getAmount(), cap));
-                    }
-                }
-
-
-            });
-
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
@@ -172,14 +158,6 @@ public class CommonEventHandler {
         int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.THORN);
         if (i > 0) {
             damage = (float) MathHelper.floor(damage * (double) ((float) i * 0.15F));
-        }
-        return damage;
-    }
-
-    public static float getDamageAddition(float damage, MobEnchantCapability cap) {
-        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.STRONG);
-        if (level > 0) {
-            damage += 1.0F + (float) Math.max(0, level - 1) * 0.5F;
         }
         return damage;
     }
