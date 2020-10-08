@@ -1,0 +1,68 @@
+{
+  "pools": [
+    {
+      "rolls": {
+        "min": 0.0,
+        "max": 2.0,
+        "type": "minecraft:uniform"
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "weight": 15,
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{StoredMobEnchants: [{MobEnchant: \"enchantwithmob:protection\", EnchantLevel: 4}]}"
+            }
+          ],
+          "name": "enchantwithmob:mob_enchant_book"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{StoredMobEnchants: [{MobEnchant: \"enchantwithmob:strong\", EnchantLevel: 3}]}"
+            }
+          ],
+          "name": "enchantwithmob:mob_enchant_book"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{StoredMobEnchants: [{MobEnchant: \"enchantwithmob:speedy\", EnchantLevel: 2}]}"
+            }
+          ],
+          "name": "enchantwithmob:mob_enchant_book"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{StoredMobEnchants: [{MobEnchant: \"enchantwithmob:thorn\", EnchantLevel: 3}]}"
+            }
+          ],
+          "name": "enchantwithmob:mob_enchant_book"
+        },
+        {
+          "type": "minecraft:item",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_nbt",
+              "tag": "{StoredMobEnchants: [{MobEnchant: \"enchantwithmob:health_boost\", EnchantLevel: 4}]}"
+            }
+          ],
+          "name": "enchantwithmob:mob_enchant_book"
+        }
+      ]
+    }
+  ]
+}
