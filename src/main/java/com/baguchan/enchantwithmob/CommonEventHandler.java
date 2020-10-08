@@ -128,16 +128,14 @@ public class CommonEventHandler {
 
             attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                if (event.getSource().isExplosion() || event.getSource().isMagicDamage() || event.getSource().isProjectile()) {
-                    if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
-                        //make snowman stronger
-                        if (event.getAmount() == 0) {
-                            event.setAmount(getDamageAddition(1, cap));
-                        } else {
-                            event.setAmount(getDamageAddition(event.getAmount(), cap));
-                        }
-                    }
-                }
+                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
+                     //make snowman stronger
+                     if (event.getAmount() == 0) {
+                         event.setAmount(getDamageAddition(1, cap));
+                     } else {
+                         event.setAmount(getDamageAddition(event.getAmount(), cap));
+                     }
+                 }
             });
 
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
