@@ -126,6 +126,20 @@ public class CommonEventHandler {
         if (event.getSource().getTrueSource() instanceof LivingEntity) {
             LivingEntity attaker = (LivingEntity) event.getSource().getTrueSource();
 
+            attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+            {
+                if (event.getSource().isExplosion() || event.getSource().isMagicDamage() || event.getSource().isProjectile()) {
+                    if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
+                        //make snowman stronger
+                        if (event.getAmount() == 0) {
+                            event.setAmount(getDamageAddition(1, cap));
+                        } else {
+                            event.setAmount(getDamageAddition(event.getAmount(), cap));
+                        }
+                    }
+                }
+            });
+
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
@@ -144,6 +158,14 @@ public class CommonEventHandler {
                 event.setAmount(getDamageReduction(event.getAmount(), cap));
             }
         });
+    }
+
+    public static float getDamageAddition(float damage, MobEnchantCapability cap) {
+        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.STRONG);
+        if (level > 0) {
+            damage += 1.0F + (float) Math.max(0, level - 1) * 1.0F;
+        }
+        return damage;
     }
 
     public static float getDamageReduction(float damage, MobEnchantCapability cap) {
