@@ -8,5 +8,6 @@
   "mobenchant.enchantwithmob.name.enchantwithmob.thorn": "Espinhos",
   "mobenchant.enchantwithmob.name.enchantwithmob.health_boost": "Vida Extra",
   "advancements.adventure.hidden_books.title": "Livros Ocultos",
-  "advancements.adventure.hidden_books.description": "Obtenha o Livro de Encantamentos de Mobs"
+  "advancements.adventure.hidden_books.description": "Obtenha o Livro de Encantamentos de Mobs",
+  "mobenchant.enchantwithmob.when_ehcnanted": "Quando Encantado" 
 }
