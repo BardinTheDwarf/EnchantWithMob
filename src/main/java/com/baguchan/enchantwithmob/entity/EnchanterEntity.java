@@ -146,7 +146,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
         super.dropSpecialItems(source, looting, recentlyHitIn);
 
-        if (this.rand.nextFloat() < 0.125F + 0.025F * looting) {
+        if (this.rand.nextFloat() < 0.15F + 0.025F * looting) {
             ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
             this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 20, true));
