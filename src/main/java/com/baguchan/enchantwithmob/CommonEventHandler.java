@@ -73,6 +73,10 @@ public class CommonEventHandler {
                                             cap.addMobEnchant(livingEntity, mobEnchant, i);
                                             break;
                                     }
+
+                                    if (mobEnchant == MobEnchants.HEALTH_BOOST) {
+                                        livingEntity.setHealth(livingEntity.getMaxHealth());
+                                    }
                                 });
                             }
                         }
