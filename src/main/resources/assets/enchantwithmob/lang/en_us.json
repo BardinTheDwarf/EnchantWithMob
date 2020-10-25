@@ -9,5 +9,8 @@
   "mobenchant.enchantwithmob.name.enchantwithmob.health_boost": "HealthBoost",
   "advancements.adventure.hidden_books.title": "Hidden Books",
   "advancements.adventure.hidden_books.description": "Get the Mob Enchantment Book",
-  "mobenchant.enchantwithmob.when_ehcnanted": "When Enchanted"
+  "mobenchant.enchantwithmob.when_ehcnanted": "When Enchanted",
+  "enchantwithmob.config.naturalSpawnEnchantedMob": "Natural Spawn Enchanted Mob",
+  "enchantwithmob.config.spawnEnchantedAnimal": "Spawn Enchanted Animal",
+  "enchantwithmob.config.enchantedBoss": "Enchanted Boss(Harder)"
 }

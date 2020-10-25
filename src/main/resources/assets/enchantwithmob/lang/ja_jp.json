@@ -9,5 +9,8 @@
   "mobenchant.enchantwithmob.name.enchantwithmob.health_boost": "体力増強",
   "advancements.adventure.hidden_books.title": "禁断の本",
   "advancements.adventure.hidden_books.description": "モブエンチャントブックを手に入れる",
-  "mobenchant.enchantwithmob.when_ehcnanted": "When Enchanted"
+  "mobenchant.enchantwithmob.when_ehcnanted": "エンチャントした時",
+  "enchantwithmob.config.naturalSpawnEnchantedMob": "エンチャントされたmobをスポーンさせる",
+  "enchantwithmob.config.spawnEnchantedAnimal": "エンチャントされた動物をスポーンさせる",
+  "enchantwithmob.config.enchantedBoss": "エンチャントされたBossをスポーンさせる(上級者向け)"
 }

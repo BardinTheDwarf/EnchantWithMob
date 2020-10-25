@@ -48,7 +48,12 @@ public class CommonEventHandler {
 
             if (world.getWorldInfo().getGameRulesInstance().get(GameRules.MOB_GRIEFING).get() && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                 LivingEntity livingEntity = (LivingEntity) event.getEntity();
-                if (!(livingEntity instanceof AnimalEntity) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
+                if (EnchantConfig.COMMON.enchantedBoss.get() && !livingEntity.isNonBoss()) {
+                    livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+                    {
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), 10, true);
+                    });
+                } else if (!(livingEntity instanceof AnimalEntity) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
                     if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
                         if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getDifficultyForLocation(livingEntity.getPosition()).getClampedAdditionalDifficulty() * 0.05F) {
                             if (!world.isRemote()) {

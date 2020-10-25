@@ -169,6 +169,28 @@ public class MobEnchantUtils {
         itemIn.getTag().put(TAG_STORED_MOBENCHANTS, listnbt);
     }
 
+    public static void addMobEnchantToEntityFromItem(ItemStack stack, LivingEntity target, MobEnchantCapability cap) {
+        if (cap.hasEnchant()) {
+            boolean flag = true;
+            for (MobEnchantHandler mobEnchant : cap.mobEnchants) {
+                if (mobEnchant.getMobEnchant() != null) {
+
+                    for (MobEnchant enchantment : MobEnchantUtils.getEnchantments(stack).keySet()) {
+                        if (enchantment == mobEnchant.getMobEnchant() || !mobEnchant.getMobEnchant().isCompatibleWith(enchantment)) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (flag) {
+                MobEnchantUtils.addMobEnchantToEntity(stack, target, cap);
+            }
+        } else {
+            MobEnchantUtils.addMobEnchantToEntity(stack, target, cap);
+        }
+    }
+
     public static void addMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
         ListNBT listnbt = getEnchantmentListForNBT(itemIn.getTag());
         for (int i = 0; i < listnbt.size(); ++i) {
