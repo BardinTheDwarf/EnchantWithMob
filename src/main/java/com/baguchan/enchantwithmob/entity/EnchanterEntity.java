@@ -89,10 +89,6 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.tick();
 
         if (this.world.isRemote) {
-            if (this.clientSideBookAnimation != this.clientSideBookAnimation0) {
-                this.recalculateSize();
-            }
-
             this.clientSideBookAnimation0 = this.clientSideBookAnimation;
             if (this.isSpellcasting()) {
                 this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation + 0.1F, 0.0F, 1.0F);
@@ -147,9 +143,15 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.dropSpecialItems(source, looting, recentlyHitIn);
 
         if (this.rand.nextFloat() < 0.15F + 0.025F * looting) {
-            ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+            if (this.raid != null && this.isRaidActive() && this.getWave() > 0) {
+                ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
-            this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 20, true));
+                this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 20 + this.getWave() * 2, true));
+            } else {
+                ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+
+                this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 20, true));
+            }
         }
     }
 
