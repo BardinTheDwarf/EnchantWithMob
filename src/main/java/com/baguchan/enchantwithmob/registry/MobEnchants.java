@@ -14,10 +14,10 @@ import net.minecraftforge.registries.RegistryBuilder;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
     public static final MobEnchant PROTECTION = new ProtectionMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 4));
-    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 2)).addAttributesModifier(Attributes.MOVEMENT_SPEED, "91AEAA56-376B-4498-935B-2F7F68070635", (double) 0.05F, AttributeModifier.Operation.ADDITION);
+    public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.UNCOMMON, 2)).addAttributesModifier(Attributes.MOVEMENT_SPEED, "91AEAA56-376B-4498-935B-2F7F68070635", (double) 0.05F, AttributeModifier.Operation.ADDITION);
     public static final MobEnchant STRONG = new StrongMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
     public static final MobEnchant THORN = new ThronEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3));
-    public static final MobEnchant HEALTH_BOOST = new ThronEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3)).addAttributesModifier(Attributes.MAX_HEALTH, "5D6F0BA2-1186-46AC-B896-C61C5CEE99CC", 2.0D, AttributeModifier.Operation.ADDITION);
+    public static final MobEnchant HEALTH_BOOST = new HealthBoostMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 5)).addAttributesModifier(Attributes.MAX_HEALTH, "5D6F0BA2-1186-46AC-B896-C61C5CEE99CC", 2.0D, AttributeModifier.Operation.ADDITION);
 
 
     private static ForgeRegistry<MobEnchant> registry;
