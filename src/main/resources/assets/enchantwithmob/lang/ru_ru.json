@@ -1,4 +1,16 @@
 {
   "item.enchantwithmob.enchanter_spawn_egg": "Яйцо призыва чародея",
-  "entity.enchantwithmob.enchanter": "Чародей"
+  "item.enchantwithmob.mob_enchant_book": "Чародейская книга для существ",
+  "entity.enchantwithmob.enchanter": "Чародей",
+  "mobenchant.enchantwithmob.name.enchantwithmob.protection": "Сопротивление",
+  "mobenchant.enchantwithmob.name.enchantwithmob.strong": "Сила",
+  "mobenchant.enchantwithmob.name.enchantwithmob.speedy": "Скорость",
+  "mobenchant.enchantwithmob.name.enchantwithmob.thorn": "Шипы",
+  "mobenchant.enchantwithmob.name.enchantwithmob.health_boost": "Прилив здоровья",
+  "advancements.adventure.hidden_books.title": "Сокрытые знания",
+  "advancements.adventure.hidden_books.description": "Зачаруйте существо книгой чародея",
+  "mobenchant.enchantwithmob.when_ehcnanted": "Когда зачарован",
+  "enchantwithmob.config.naturalSpawnEnchantedMob": "Natural Spawn Enchanted Mob",
+  "enchantwithmob.config.spawnEnchantedAnimal": "Spawn Enchanted Animal",
+  "enchantwithmob.config.enchantedBoss": "Enchanted Boss(Harder)"
 }
