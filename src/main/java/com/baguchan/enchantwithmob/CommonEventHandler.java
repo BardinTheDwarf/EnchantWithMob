@@ -212,6 +212,8 @@ public class CommonEventHandler {
 
                     stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
 
+                    event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 40);
+
                     event.setCancellationResult(ActionResultType.SUCCESS);
                     event.setCanceled(true);
                 }
