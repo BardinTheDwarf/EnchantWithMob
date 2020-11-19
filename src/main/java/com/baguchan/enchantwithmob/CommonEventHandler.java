@@ -13,8 +13,10 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
@@ -23,6 +25,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -191,6 +194,30 @@ public class CommonEventHandler {
         return damage;
     }
 
+
+    @SubscribeEvent
+    public static void onRightClick(PlayerInteractEvent.EntityInteract event) {
+        ItemStack stack = event.getItemStack();
+        Entity entityTarget = event.getTarget();
+
+        if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK) {
+            if (entityTarget instanceof LivingEntity) {
+                LivingEntity target = (LivingEntity) entityTarget;
+                if (MobEnchantUtils.hasMobEnchant(stack)) {
+                    target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+                    {
+                        MobEnchantUtils.addMobEnchantToEntityFromItem(stack, target, cap);
+                    });
+                    event.getPlayer().playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+
+                    stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
+
+                    event.setCancellationResult(ActionResultType.SUCCESS);
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void onAnvilUpdate(AnvilUpdateEvent event) {

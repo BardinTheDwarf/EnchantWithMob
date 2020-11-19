@@ -1,25 +1,19 @@
 package com.baguchan.enchantwithmob.item;
 
-import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -35,7 +29,11 @@ public class MobEnchantBookItem extends Item {
         super(group);
     }
 
-    @Override
+
+    /*
+     * Implemented onRightClick (method) inside CommonEventHandler instead of this method
+     */
+    /*@Override
     public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
         if (MobEnchantUtils.hasMobEnchant(stack)) {
             target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
@@ -50,7 +48,7 @@ public class MobEnchantBookItem extends Item {
         }
 
         return super.itemInteractionForEntity(stack, playerIn, target, hand);
-    }
+    }*/
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
