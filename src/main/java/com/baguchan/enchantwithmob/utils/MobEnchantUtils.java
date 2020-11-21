@@ -237,6 +237,17 @@ public class MobEnchantUtils {
         return false;
     }
 
+    public static boolean checkAllowMobEnchant(List<MobEnchantHandler> list, LivingEntity livingEntity) {
+        for (MobEnchantHandler mobEnchant : list) {
+            if (mobEnchant != null) {
+                if (!mobEnchant.getMobEnchant().isCompatibleMob(livingEntity)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public static int getMobEnchantLevelFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
         for (MobEnchantHandler mobEnchant : list) {
             if (mobEnchant != null) {
@@ -260,7 +271,7 @@ public class MobEnchantUtils {
             level = level + 1 + randomIn.nextInt(i / 4 + 1) + randomIn.nextInt(i / 4 + 1);
             float f = (randomIn.nextFloat() + randomIn.nextFloat() - 1.0F) * 0.15F;
             level = MathHelper.clamp(Math.round((float) level + (float) level * f), 1, Integer.MAX_VALUE);
-            List<MobEnchantmentData> list1 = getMobEnchantmentDatas(level, allowRare);
+            List<MobEnchantmentData> list1 = makeMobEnchantmentDatas(level, allowRare);
             if (!list1.isEmpty()) {
                 list.add(WeightedRandom.getRandomItem(randomIn, list1));
 
@@ -283,7 +294,7 @@ public class MobEnchantUtils {
      * get MobEnchantment data.
      * when not allow rare enchantment,Ignore rare enchantment
      */
-    public static List<MobEnchantmentData> getMobEnchantmentDatas(int p_185291_0_, boolean allowRare) {
+    public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowRare) {
         List<MobEnchantmentData> list = Lists.newArrayList();
 
         for (MobEnchant enchantment : MobEnchants.getRegistry().getValues()) {
@@ -300,13 +311,11 @@ public class MobEnchantUtils {
         return list;
     }
 
-    public static void removeIncompatible(List<MobEnchantmentData> dataList, MobEnchantmentData data) {
+    private static void removeIncompatible(List<MobEnchantmentData> dataList, MobEnchantmentData data) {
         Iterator<MobEnchantmentData> iterator = dataList.iterator();
 
-        //TODO need to Incompatible System on MobEnchantment?
-
         while (iterator.hasNext()) {
-            if (data.enchantment == iterator.next().enchantment) {
+            if (!data.enchantment.isCompatibleWith((iterator.next()).enchantment)) {
                 iterator.remove();
             }
         }
