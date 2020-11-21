@@ -54,7 +54,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
                 EntityModel<T> entitymodel = this.func_225635_b_();
                 entitymodel.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
                 this.getEntityModel().copyModelAttributesTo(entitymodel);
-                IVertexBuilder ivertexbuilder = bufferIn.getBuffer(getEnergyLight(this.func_225633_a_(), this.func_225634_a_(f), f * 0.01F));
+                IVertexBuilder ivertexbuilder = bufferIn.getBuffer(getEnergyLight(this.getEnchantTexture(), this.func_225634_a_(f), f * 0.01F));
                 entitymodel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
                 entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
             }
@@ -69,7 +69,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         return p_225634_1_ * 0.01F;
     }
 
-    protected ResourceLocation func_225633_a_() {
+    protected ResourceLocation getEnchantTexture() {
         return ENCHANT_TEXTURE;
     }
 
