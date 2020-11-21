@@ -155,7 +155,7 @@ public class CommonEventHandler {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
                     int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.THORN);
 
-                    if (i * 0.05F < livingEntity.getRNG().nextFloat()) {
+                    if (livingEntity.getRNG().nextFloat() < i * 0.05F) {
                         attaker.attackEntityFrom(DamageSource.causeThornsDamage(livingEntity), getThornDamage(event.getAmount(), cap));
                     }
                 }
@@ -204,18 +204,21 @@ public class CommonEventHandler {
             if (entityTarget instanceof LivingEntity) {
                 LivingEntity target = (LivingEntity) entityTarget;
                 if (MobEnchantUtils.hasMobEnchant(stack)) {
+
                     target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                     {
-                        MobEnchantUtils.addMobEnchantToEntityFromItem(stack, target, cap);
+                        if (MobEnchantUtils.checkAllowMobEnchant(cap.mobEnchants, target)) {
+                            MobEnchantUtils.addMobEnchantToEntityFromItem(stack, target, cap);
+                            event.getPlayer().playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+
+                            stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
+
+                            event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 40);
+
+                            event.setCancellationResult(ActionResultType.SUCCESS);
+                            event.setCanceled(true);
+                        }
                     });
-                    event.getPlayer().playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
-
-                    stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
-
-                    event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 40);
-
-                    event.setCancellationResult(ActionResultType.SUCCESS);
-                    event.setCanceled(true);
                 }
             }
         }
