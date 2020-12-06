@@ -12,6 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -25,6 +26,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,10 +39,7 @@ public class CommonEventHandler {
     @SubscribeEvent
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof LivingEntity) {
-
-            if (!(event.getObject() instanceof PlayerEntity)) {
-                event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
-            }
+            event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
         }
     }
 
@@ -290,5 +289,27 @@ public class CommonEventHandler {
                 event.setMaterialCost(1);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        PlayerEntity player = event.getPlayer();
+        if (player instanceof ServerPlayerEntity)
+            player.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(handler -> {
+                for (int i = 0; i < handler.getMobEnchants().size(); i++) {
+                    EnchantWithMob.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MobEnchantedMessage(player, handler.getMobEnchants().get(i)));
+
+                }
+            });
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        PlayerEntity playerEntity = event.getPlayer();
+        playerEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(handler -> {
+            for (int i = 0; i < handler.getMobEnchants().size(); i++) {
+                EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new MobEnchantedMessage(playerEntity, handler.getMobEnchants().get(i)));
+            }
+        });
     }
 }

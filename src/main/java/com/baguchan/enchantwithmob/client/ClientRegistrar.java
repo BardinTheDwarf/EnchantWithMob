@@ -15,5 +15,11 @@ public class ClientRegistrar {
                 ((LivingRenderer) r).addLayer(new EnchantLayer((LivingRenderer) r));
             }
         });
+
+        Minecraft.getInstance().getRenderManager().getSkinMap().values().forEach(r -> {
+            if (r instanceof LivingRenderer) {
+                ((LivingRenderer) r).addLayer(new EnchantLayer((LivingRenderer) r));
+            }
+        });
     }
 }

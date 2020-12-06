@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.item;
 
+import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -8,12 +9,16 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -49,6 +54,25 @@ public class MobEnchantBookItem extends Item {
 
         return super.itemInteractionForEntity(stack, playerIn, target, hand);
     }*/
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        if (MobEnchantUtils.hasMobEnchant(stack)) {
+            playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+            {
+                MobEnchantUtils.addMobEnchantToEntityFromItem(stack, playerIn, cap);
+            });
+            playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+
+            stack.damageItem(1, playerIn, (entity) -> entity.sendBreakAnimation(handIn));
+
+            playerIn.getCooldownTracker().setCooldown(stack.getItem(), 60);
+
+            return ActionResult.resultSuccess(stack);
+        }
+        return super.onItemRightClick(worldIn, playerIn, handIn);
+    }
 
     @Override
     public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {

@@ -36,7 +36,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
         //Sync Client Enchant
         if (!entity.world.isRemote) {
             MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
-            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
     }
 
@@ -49,7 +49,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
         //Sync Client Enchant
         if (!entity.world.isRemote) {
             RemoveMobEnchantMessage message = new RemoveMobEnchantMessage(entity, mobEnchant, level);
-            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
     }
 
@@ -62,7 +62,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
         //Sync Client Enchant
         if (!entity.world.isRemote) {
             RemoveMobEnchantMessage message = new RemoveMobEnchantMessage(entity, mobEnchant, level);
-            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), message);
+            EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
     }
 
