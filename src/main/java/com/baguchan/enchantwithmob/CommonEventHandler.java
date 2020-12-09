@@ -92,10 +92,8 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void onEntitySpawnSpecial(EntityJoinWorldEvent event) {
-
-
-        if (!event.getEntity().world.isRemote && event.getEntity() instanceof LivingEntity) {
+    public static void onEntitySpawn(EntityJoinWorldEvent event) {
+        if (event.getEntity() instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) event.getEntity();
 
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
