@@ -23,6 +23,7 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -91,20 +92,15 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void onEntityJoinEnchanted(LivingSpawnEvent event) {
-        LivingEntity livingEntity = (LivingEntity) event.getEntityLiving();
+    public static void onEntitySpawnSpecial(EntityJoinWorldEvent event) {
 
 
-        if (!livingEntity.world.isRemote) {
+        if (!event.getEntity().world.isRemote && event.getEntity() instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) event.getEntity();
+
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                //Sync Client Enchant
-                if (cap.hasEnchant()) {
-                    for (int i = 0; i < cap.getMobEnchants().size(); i++) {
-                        MobEnchantedMessage message = new MobEnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
-                        EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
-                    }
-                } else if (EnchantConfig.COMMON.enchantedBoss.get() && !livingEntity.isNonBoss()) {
+                if (!cap.hasEnchant() && EnchantConfig.COMMON.enchantedBoss.get() && !livingEntity.isNonBoss()) {
                     if (livingEntity.world.getWorldInfo().getGameRulesInstance().get(GameRules.MOB_GRIEFING).get() && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                         MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, livingEntity.world.getRandom(), 10, true);
                     }
