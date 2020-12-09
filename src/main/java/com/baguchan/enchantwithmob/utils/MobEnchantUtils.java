@@ -30,7 +30,7 @@ public class MobEnchantUtils {
     /**
      * get MobEnchant From NBT
      *
-     * @param tag
+     * @param tag nbt tag
      */
     @Nullable
     public static MobEnchant getEnchantFromNBT(@Nullable CompoundNBT tag) {
@@ -44,7 +44,7 @@ public class MobEnchantUtils {
     /**
      * get MobEnchant Level From NBT
      *
-     * @param tag
+     * @param tag nbt tag
      */
     public static int getEnchantLevelFromNBT(@Nullable CompoundNBT tag) {
         if (tag != null) {
@@ -57,7 +57,7 @@ public class MobEnchantUtils {
     /**
      * get MobEnchant From String
      *
-     * @param id
+     * @param id MobEnchant id
      */
     @Nullable
     public static MobEnchant getEnchantFromString(@Nullable String id) {
@@ -71,7 +71,7 @@ public class MobEnchantUtils {
     /**
      * check ItemStack has Mob Enchant
      *
-     * @param stack
+     * @param stack MobEnchanted Item
      */
     public static boolean hasMobEnchant(ItemStack stack) {
         CompoundNBT compoundnbt = stack.getTag();
@@ -81,7 +81,7 @@ public class MobEnchantUtils {
     /**
      * check NBT has Mob Enchant
      *
-     * @param compoundnbt
+     * @param compoundnbt nbt tag
      */
     public static ListNBT getEnchantmentListForNBT(CompoundNBT compoundnbt) {
         return compoundnbt != null ? compoundnbt.getList(TAG_STORED_MOBENCHANTS, 10) : new ListNBT();
@@ -90,7 +90,7 @@ public class MobEnchantUtils {
     /**
      * get Mob Enchantments From ItemStack
      *
-     * @param stack
+     * @param stack MobEnchanted Item
      */
     public static Map<MobEnchant, Integer> getEnchantments(ItemStack stack) {
         ListNBT listnbt = getEnchantmentListForNBT(stack.getTag());
@@ -169,41 +169,39 @@ public class MobEnchantUtils {
         itemIn.getTag().put(TAG_STORED_MOBENCHANTS, listnbt);
     }
 
-    public static void addMobEnchantToEntityFromItem(ItemStack stack, LivingEntity target, MobEnchantCapability cap) {
-        if (cap.hasEnchant()) {
-            boolean flag = true;
-            for (MobEnchantHandler mobEnchant : cap.mobEnchants) {
-                if (mobEnchant.getMobEnchant() != null) {
-
-                    for (MobEnchant enchantment : MobEnchantUtils.getEnchantments(stack).keySet()) {
-                        if (enchantment == mobEnchant.getMobEnchant() || !mobEnchant.getMobEnchant().isCompatibleWith(enchantment)) {
-                            flag = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (flag) {
-                MobEnchantUtils.addMobEnchantToEntity(stack, target, cap);
-            }
-        } else {
-            MobEnchantUtils.addMobEnchantToEntity(stack, target, cap);
-        }
-    }
-
-    public static void addMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
+    /**
+     * add Mob Enchantments From ItemStack
+     *
+     * @param itemIn     MobEnchanted Item
+     * @param entity     Enchanting target
+     * @param capability MobEnchant Capability
+     */
+    public static void addItemMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
         ListNBT listnbt = getEnchantmentListForNBT(itemIn.getTag());
         for (int i = 0; i < listnbt.size(); ++i) {
             CompoundNBT compoundnbt = listnbt.getCompound(i);
-            capability.addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));
+            if (checkAllowMobEnchantFromMob(MobEnchantUtils.getEnchantFromNBT(compoundnbt), entity, capability)) {
+                capability.addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));
+            }
         }
     }
 
+    /**
+     * add Mob Enchantments From ItemStack
+     *
+     * @param livingEntity Enchanting target
+     * @param capability   MobEnchant Capability
+     * @param random       Random
+     * @param level        max limit level MobEnchant
+     * @param allowRare    setting is allow rare enchant
+     */
     public static void addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
         List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
         for (MobEnchantmentData enchantmentdata : list) {
-            capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+            if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
+                capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+            }
         }
     }
 
@@ -237,10 +235,10 @@ public class MobEnchantUtils {
         return false;
     }
 
-    public static boolean checkAllowMobEnchant(List<MobEnchantHandler> list, LivingEntity livingEntity) {
-        for (MobEnchantHandler mobEnchant : list) {
+    public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, MobEnchantCapability capability) {
+        for (MobEnchantHandler enchantHandler : capability.getMobEnchants()) {
             if (mobEnchant != null) {
-                if (!mobEnchant.getMobEnchant().isCompatibleMob(livingEntity)) {
+                if (!mobEnchant.isCompatibleMob(livingEntity) || !enchantHandler.getMobEnchant().isCompatibleWith(mobEnchant)) {
                     return false;
                 }
             }

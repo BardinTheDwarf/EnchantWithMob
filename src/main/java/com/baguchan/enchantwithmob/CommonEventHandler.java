@@ -199,24 +199,22 @@ public class CommonEventHandler {
         ItemStack stack = event.getItemStack();
         Entity entityTarget = event.getTarget();
 
-        if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK) {
+        if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK && !event.getPlayer().getCooldownTracker().hasCooldown(stack.getItem())) {
             if (entityTarget instanceof LivingEntity) {
                 LivingEntity target = (LivingEntity) entityTarget;
                 if (MobEnchantUtils.hasMobEnchant(stack)) {
 
                     target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                     {
-                        if (MobEnchantUtils.checkAllowMobEnchant(cap.mobEnchants, target)) {
-                            MobEnchantUtils.addMobEnchantToEntityFromItem(stack, target, cap);
-                            event.getPlayer().playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+                        MobEnchantUtils.addItemMobEnchantToEntity(stack, target, cap);
+                        event.getPlayer().playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-                            stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
+                        stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
 
-                            event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 40);
+                        event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 40);
 
-                            event.setCancellationResult(ActionResultType.SUCCESS);
-                            event.setCanceled(true);
-                        }
+                        event.setCancellationResult(ActionResultType.SUCCESS);
+                        event.setCanceled(true);
                     });
                 }
             }

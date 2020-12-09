@@ -61,7 +61,7 @@ public class MobEnchantBookItem extends Item {
         if (MobEnchantUtils.hasMobEnchant(stack)) {
             playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                MobEnchantUtils.addMobEnchantToEntityFromItem(stack, playerIn, cap);
+                MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
             });
             playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
