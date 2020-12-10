@@ -92,7 +92,7 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void onEntitySpawn(EntityJoinWorldEvent event) {
+    public static void onEntityJoin(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) event.getEntity();
 
@@ -101,6 +101,26 @@ public class CommonEventHandler {
                 if (!cap.hasEnchant() && EnchantConfig.COMMON.enchantedBoss.get() && !livingEntity.isNonBoss()) {
                     if (livingEntity.world.getWorldInfo().getGameRulesInstance().get(GameRules.MOB_GRIEFING).get() && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
                         MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, livingEntity.world.getRandom(), 10, true);
+                    }
+                }
+            });
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void onEntitySpawn(LivingSpawnEvent event) {
+        LivingEntity livingEntity = (LivingEntity) event.getEntityLiving();
+
+
+        if (!livingEntity.world.isRemote) {
+            livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+            {
+                //Sync Client Enchant
+                if (cap.hasEnchant()) {
+                    for (int i = 0; i < cap.getMobEnchants().size(); i++) {
+                        MobEnchantedMessage message = new MobEnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
+                        EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
                     }
                 }
             });

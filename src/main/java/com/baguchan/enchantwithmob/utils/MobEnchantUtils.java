@@ -237,10 +237,8 @@ public class MobEnchantUtils {
 
     public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, MobEnchantCapability capability) {
         for (MobEnchantHandler enchantHandler : capability.getMobEnchants()) {
-            if (mobEnchant != null) {
-                if (!mobEnchant.isCompatibleMob(livingEntity) || !enchantHandler.getMobEnchant().isCompatibleWith(mobEnchant)) {
-                    return false;
-                }
+            if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity) || mobEnchant != null && enchantHandler.getMobEnchant() != null && !enchantHandler.getMobEnchant().isCompatibleWith(mobEnchant)) {
+                return false;
             }
         }
         return true;
