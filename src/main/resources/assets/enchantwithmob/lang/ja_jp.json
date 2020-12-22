@@ -12,5 +12,6 @@
   "mobenchant.enchantwithmob.when_ehcnanted": "エンチャントした時",
   "enchantwithmob.config.naturalSpawnEnchantedMob": "エンチャントされたmobをスポーンさせる",
   "enchantwithmob.config.spawnEnchantedAnimal": "エンチャントされた動物をスポーンさせる",
-  "enchantwithmob.config.enchantedBoss": "エンチャントされたBossをスポーンさせる(上級者向け)"
+  "enchantwithmob.config.enchantedBoss": "エンチャントされたBossをスポーンさせる(上級者向け)",
+  "enchantwithmob.config.enchantYourSelf": "エンチャントを自分自身でできるようにする"
 }

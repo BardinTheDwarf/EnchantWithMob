@@ -14,6 +14,7 @@ public class EnchantConfig {
     public static boolean naturalSpawnEnchantedMob;
     public static boolean spawnEnchantedAnimal;
     public static boolean enchantedBoss;
+    public static boolean enchantYourSelf;
 
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
@@ -25,6 +26,7 @@ public class EnchantConfig {
         naturalSpawnEnchantedMob = COMMON.naturalSpawnEnchantedMob.get();
         spawnEnchantedAnimal = COMMON.spawnEnchantedAnimal.get();
         enchantedBoss = COMMON.enchantedBoss.get();
+        enchantYourSelf = COMMON.enchantYourSelf.get();
     }
 
     @SubscribeEvent
@@ -38,6 +40,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue naturalSpawnEnchantedMob;
         public final ForgeConfigSpec.BooleanValue spawnEnchantedAnimal;
         public final ForgeConfigSpec.BooleanValue enchantedBoss;
+        public final ForgeConfigSpec.BooleanValue enchantYourSelf;
 
         public Common(ForgeConfigSpec.Builder builder) {
             naturalSpawnEnchantedMob = builder
@@ -49,6 +52,9 @@ public class EnchantConfig {
             enchantedBoss = builder
                     .translation(EnchantWithMob.MODID + ".config.enchantedBoss")
                     .define("make Enchanted Boss Monster can spawn", false);
+            enchantYourSelf = builder
+                    .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
+                    .define("when this config turn on,you can enchant yourself", true);
         }
     }
 

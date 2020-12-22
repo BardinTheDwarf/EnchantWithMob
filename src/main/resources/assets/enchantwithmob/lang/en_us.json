@@ -12,5 +12,6 @@
   "mobenchant.enchantwithmob.when_ehcnanted": "When Enchanted",
   "enchantwithmob.config.naturalSpawnEnchantedMob": "Natural Spawn Enchanted Mob",
   "enchantwithmob.config.spawnEnchantedAnimal": "Spawn Enchanted Animal",
-  "enchantwithmob.config.enchantedBoss": "Enchanted Boss(Harder)"
+  "enchantwithmob.config.enchantedBoss": "Enchanted Boss(Harder)",
+  "enchantwithmob.config.enchantYourSelf": "Enchant YourSelf"
 }
