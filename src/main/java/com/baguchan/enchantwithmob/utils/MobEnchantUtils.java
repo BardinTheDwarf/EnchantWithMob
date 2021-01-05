@@ -186,6 +186,10 @@ public class MobEnchantUtils {
         }
     }
 
+    public static void removeMobEnchantToEntity(LivingEntity entity, MobEnchantCapability capability) {
+        capability.removeAllMobEnchant(entity);
+    }
+
     /**
      * add Mob Enchantments From ItemStack
      *

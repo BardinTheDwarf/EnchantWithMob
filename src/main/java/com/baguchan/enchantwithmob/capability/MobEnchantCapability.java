@@ -2,7 +2,7 @@ package com.baguchan.enchantwithmob.capability;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
-import com.baguchan.enchantwithmob.message.RemoveMobEnchantMessage;
+import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
@@ -43,14 +43,17 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
     /*
      * Remove MobEnchant on Entity
      */
-    public void removeMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int level) {
-        this.mobEnchants.remove(mobEnchant);
-        this.onRemoveEnchantEffect(entity, mobEnchant);
+    public void removeAllMobEnchant(LivingEntity entity) {
+
+        for (int i = 0; i < mobEnchants.size(); ++i) {
+            this.onRemoveEnchantEffect(entity, mobEnchants.get(i).getMobEnchant());
+        }
         //Sync Client Enchant
         if (!entity.world.isRemote) {
-            RemoveMobEnchantMessage message = new RemoveMobEnchantMessage(entity, mobEnchant, level);
+            RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
             EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
+        this.mobEnchants.removeAll(mobEnchants);
     }
 
     /*
@@ -61,7 +64,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
         this.onRemoveEnchantEffect(entity, mobEnchant);
         //Sync Client Enchant
         if (!entity.world.isRemote) {
-            RemoveMobEnchantMessage message = new RemoveMobEnchantMessage(entity, mobEnchant, level);
+            RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
             EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
     }

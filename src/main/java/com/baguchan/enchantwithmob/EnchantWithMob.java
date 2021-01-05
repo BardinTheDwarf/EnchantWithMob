@@ -4,7 +4,7 @@ import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantStorage;
 import com.baguchan.enchantwithmob.client.ClientRegistrar;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
-import com.baguchan.enchantwithmob.message.RemoveMobEnchantMessage;
+import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
 import com.baguchan.enchantwithmob.registry.ModEntities;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -79,9 +79,9 @@ public class EnchantWithMob
                 .encoder(MobEnchantedMessage::serialize).decoder(MobEnchantedMessage::deserialize)
                 .consumer(MobEnchantedMessage::handle)
                 .add();
-        CHANNEL.messageBuilder(RemoveMobEnchantMessage.class, 1)
-                .encoder(RemoveMobEnchantMessage::serialize).decoder(RemoveMobEnchantMessage::deserialize)
-                .consumer(RemoveMobEnchantMessage::handle)
+        CHANNEL.messageBuilder(RemoveAllMobEnchantMessage.class, 1)
+                .encoder(RemoveAllMobEnchantMessage::serialize).decoder(RemoveAllMobEnchantMessage::deserialize)
+                .consumer(RemoveAllMobEnchantMessage::handle)
                 .add();
     }
 

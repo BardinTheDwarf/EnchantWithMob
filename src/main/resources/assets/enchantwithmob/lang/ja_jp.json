@@ -1,6 +1,7 @@
 {
   "item.enchantwithmob.enchanter_spawn_egg": "エンチャンターのスポーンエッグ",
   "item.enchantwithmob.mob_enchant_book": "モブエンチャントブック",
+  "item.enchantwithmob.mob_unenchant_book": "モブアンエンチャントブック",
   "entity.enchantwithmob.enchanter": "エンチャンター",
   "mobenchant.enchantwithmob.name.enchantwithmob.protection": "防護",
   "mobenchant.enchantwithmob.name.enchantwithmob.strong": "攻撃力強化",

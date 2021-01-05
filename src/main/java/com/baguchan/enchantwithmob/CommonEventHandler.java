@@ -138,7 +138,7 @@ public class CommonEventHandler {
                 for (MobEnchantHandler enchantHandler : cap.getMobEnchants()) {
                     enchantHandler.getMobEnchant().tick(livingEntity, enchantHandler.getEnchantLevel());
                 }
-                
+
             });
         }
     }
@@ -152,14 +152,14 @@ public class CommonEventHandler {
 
             attaker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
-                     //make snowman stronger
-                     if (event.getAmount() == 0) {
-                         event.setAmount(getDamageAddition(1, cap));
-                     } else {
-                         event.setAmount(getDamageAddition(event.getAmount(), cap));
-                     }
-                 }
+                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
+                    //make snowman stronger
+                    if (event.getAmount() == 0) {
+                        event.setAmount(getDamageAddition(1, cap));
+                    } else {
+                        event.setAmount(getDamageAddition(event.getAmount(), cap));
+                    }
+                }
             });
 
             livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
@@ -167,7 +167,7 @@ public class CommonEventHandler {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.THORN)) {
                     int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.mobEnchants, MobEnchants.THORN);
 
-                    if (livingEntity.getRNG().nextFloat() < i * 0.05F) {
+                    if (livingEntity.getRNG().nextFloat() < i * 0.1F) {
                         attaker.attackEntityFrom(DamageSource.causeThornsDamage(livingEntity), getThornDamage(event.getAmount(), cap));
                     }
                 }
@@ -224,12 +224,32 @@ public class CommonEventHandler {
 
                         stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
 
-                        event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 40);
+                        event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 60);
 
                         event.setCancellationResult(ActionResultType.SUCCESS);
                         event.setCanceled(true);
                     });
                 }
+            }
+        }
+
+        if (stack.getItem() == ModItems.MOB_UNENCHANT_BOOK && !event.getPlayer().getCooldownTracker().hasCooldown(stack.getItem())) {
+            if (entityTarget instanceof LivingEntity) {
+                LivingEntity target = (LivingEntity) entityTarget;
+
+                target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+                {
+                    MobEnchantUtils.removeMobEnchantToEntity(target, cap);
+                    event.getPlayer().playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+
+                    stack.damageItem(1, event.getPlayer(), (entity) -> entity.sendBreakAnimation(event.getHand()));
+
+                    event.getPlayer().getCooldownTracker().setCooldown(stack.getItem(), 80);
+
+                    event.setCancellationResult(ActionResultType.SUCCESS);
+                    event.setCanceled(true);
+                });
+
             }
         }
     }
