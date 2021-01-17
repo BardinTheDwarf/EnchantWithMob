@@ -11,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -154,9 +155,9 @@ public class CommonEventHandler {
             {
                 if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.mobEnchants, MobEnchants.STRONG)) {
                     //make snowman stronger
-                    if (event.getAmount() == 0) {
+                    if (event.getSource().getTrueSource() != null && event.getSource().getTrueSource() instanceof SnowGolemEntity && event.getAmount() == 0) {
                         event.setAmount(getDamageAddition(1, cap));
-                    } else {
+                    } else if (event.getAmount() > 0) {
                         event.setAmount(getDamageAddition(event.getAmount(), cap));
                     }
                 }
