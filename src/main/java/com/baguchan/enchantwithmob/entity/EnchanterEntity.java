@@ -326,7 +326,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     static class AttackGoal extends Goal {
         private final EnchanterEntity enchanter;
-        private int cooldown = 10;
+        private int cooldown;
 
         AttackGoal(EnchanterEntity enchanter) {
             this.enchanter = enchanter;
@@ -348,7 +348,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         @Override
         public void resetTask() {
             super.resetTask();
-            this.cooldown = 10;
+            this.cooldown = 5;
         }
 
         @Override
@@ -365,6 +365,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
                         this.cooldown = 30;
                     }
+                    this.enchanter.getNavigator().clearPath();
                 }
             }
             this.cooldown = Math.max(this.cooldown - 1, 0);

@@ -49,6 +49,7 @@ public class EnchanterRenderer<T extends EnchanterEntity> extends MobRenderer<T,
 
             //When spell casting, stop animation
             if (swingProgress > 0 && !entityIn.isSpellcasting()) {
+                matrixStackIn.translate(-0.05F * (1.0F - swingProgress), -0.1F * (1.0F - swingProgress), 0.0D);
                 matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(45.0F * (1.0F - swingProgress)));
             }
 
