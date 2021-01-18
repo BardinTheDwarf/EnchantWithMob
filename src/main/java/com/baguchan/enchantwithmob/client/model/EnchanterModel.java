@@ -192,6 +192,10 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
             this.handL.rotateAngleZ = -2.3561945F;
             this.handL.rotateAngleY = 0.0F;
             this.cape.rotateAngleX = 0.1F + limbSwingAmount * 0.6F + 0.5F;
+        } else {
+            if (this.swingProgress > 0) {
+                this.arms.rotateAngleX = -0.75F * (1.0F - this.swingProgress);
+            }
         }
 
         boolean flag = abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.CROSSED;

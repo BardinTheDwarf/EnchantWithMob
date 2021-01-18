@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
@@ -22,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -43,9 +45,10 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new EnchanterEntity.CastingSpellGoal());
-        this.goalSelector.addGoal(2, new AvoidTargetEntityGoal<>(this, MobEntity.class, 6.5F, 0.8D, 1.05D));
-        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.8D, 1.15D));
-        this.goalSelector.addGoal(3, new EnchanterEntity.SpellGoal());
+        this.goalSelector.addGoal(1, new AttackGoal(this));
+        this.goalSelector.addGoal(3, new AvoidTargetEntityGoal<>(this, MobEntity.class, 6.5F, 0.8D, 1.05D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.8D, 1.15D));
+        this.goalSelector.addGoal(4, new EnchanterEntity.SpellGoal());
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
@@ -320,4 +323,57 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             super.tick();
         }
     }
+
+    static class AttackGoal extends Goal {
+        private final EnchanterEntity enchanter;
+        private int cooldown = 10;
+
+        AttackGoal(EnchanterEntity enchanter) {
+            this.enchanter = enchanter;
+            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            LivingEntity livingentity = this.enchanter.getAttackTarget();
+            if (livingentity == null) {
+                return false;
+            } else if (!livingentity.isAlive()) {
+                return false;
+            } else {
+                return this.getAttackReachSqr(livingentity) >= this.enchanter.getDistanceSq(livingentity.getPosX(), livingentity.getPosY(), livingentity.getPosZ());
+            }
+        }
+
+        @Override
+        public void resetTask() {
+            super.resetTask();
+            this.cooldown = 10;
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            LivingEntity livingentity = this.enchanter.getAttackTarget();
+
+            if (livingentity != null && livingentity.isAlive()) {
+                this.enchanter.getLookController().setLookPositionWithEntity(livingentity, 30.0F, 30.0F);
+                if (this.getAttackReachSqr(livingentity) >= this.enchanter.getDistanceSq(livingentity.getPosX(), livingentity.getPosY(), livingentity.getPosZ())) {
+                    if (this.cooldown <= 0) {
+                        this.enchanter.swingArm(Hand.MAIN_HAND);
+                        this.enchanter.attackEntityAsMob(livingentity);
+
+                        this.cooldown = 30;
+                    }
+                }
+            }
+            this.cooldown = Math.max(this.cooldown - 1, 0);
+        }
+
+        protected double getAttackReachSqr(LivingEntity attackTarget) {
+            return (double) (this.enchanter.getWidth() * 1.5F * this.enchanter.getWidth() * 1.5F + attackTarget.getWidth());
+        }
+    }
+
+
 }

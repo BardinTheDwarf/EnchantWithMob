@@ -38,6 +38,7 @@ public class EnchanterRenderer<T extends EnchanterEntity> extends MobRenderer<T,
         float bookAnimation = entityIn.getBookAnimationScale(partialTicks);
 
         float f = MathHelper.interpolateAngle(partialTicks, entityIn.prevRenderYawOffset, entityIn.renderYawOffset);
+        float swingProgress = this.getSwingProgress(entityIn, partialTicks);
 
         if (entityIn.isAlive()) {
             matrixStackIn.push();
@@ -45,6 +46,12 @@ public class EnchanterRenderer<T extends EnchanterEntity> extends MobRenderer<T,
             matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-f + 90F));
             matrixStackIn.translate(-0.575D, 0.0D, 0.0D);
             matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(60.0F * bookAnimation));
+
+            //When spell casting, stop animation
+            if (swingProgress > 0 && !entityIn.isSpellcasting()) {
+                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(45.0F * (1.0F - swingProgress)));
+            }
+
             this.bookModel.setBookState(0.0F, MathHelper.clamp(bookAnimation, 0.0F, 0.1F), MathHelper.clamp(bookAnimation, 0.0F, 0.9F), bookAnimation);
             IVertexBuilder ivertexbuilder = EnchantmentTableTileEntityRenderer.TEXTURE_BOOK.getBuffer(bufferIn, RenderType::getEntitySolid);
             this.bookModel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
