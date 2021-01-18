@@ -69,7 +69,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeMap() {
-        return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.3F).createMutableAttribute(Attributes.MAX_HEALTH, 24.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 24.0D);
+        return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.3F).createMutableAttribute(Attributes.MAX_HEALTH, 24.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 24.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0F);
     }
 
     @Override
