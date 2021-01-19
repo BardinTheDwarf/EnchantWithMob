@@ -279,7 +279,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         }
 
         protected SoundEvent getSpellPrepareSound() {
-            return SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED;
+            return SoundEvents.ITEM_BOOK_PAGE_TURN;
         }
 
         protected SpellcastingIllagerEntity.SpellType getSpellType() {

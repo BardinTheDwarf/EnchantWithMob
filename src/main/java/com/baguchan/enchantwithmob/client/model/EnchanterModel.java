@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.entity.model.IHasArm;
 import net.minecraft.client.renderer.entity.model.IHasHead;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
+import net.minecraft.client.renderer.model.ModelHelper;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.monster.AbstractIllagerEntity;
 import net.minecraft.util.HandSide;
@@ -135,40 +136,11 @@ public class EnchanterModel<T extends EnchanterEntity> extends SegmentedModel<T>
 
         AbstractIllagerEntity.ArmPose abstractillagerentity$armpose = entityIn.getArmPose();
         if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.ATTACKING) {
-            float f = MathHelper.sin(this.swingProgress * (float)Math.PI);
-            float f1 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float)Math.PI);
-            this.handR.rotateAngleZ = 0.0F;
-            this.handL.rotateAngleZ = 0.0F;
-            this.handR.rotateAngleY = 0.15707964F;
-            this.handL.rotateAngleY = -0.15707964F;
-            if (entityIn.getPrimaryHand() == HandSide.RIGHT) {
-                this.handR.rotateAngleX = -1.8849558F + MathHelper.cos(ageInTicks * 0.09F) * 0.15F;
-                this.handL.rotateAngleX = -0.0F + MathHelper.cos(ageInTicks * 0.19F) * 0.5F;
-                this.handR.rotateAngleX += f * 2.2F - f1 * 0.4F;
-                this.handL.rotateAngleX += f * 1.2F - f1 * 0.4F;
-                this.crossArmR.rotateAngleX = -1.4137167F;
-                this.crossArmR.rotateAngleY = ((float)Math.PI / 10F);
-                this.crossArmR.rotateAngleZ = 0.07853982F;
-                this.crossArmL.rotateAngleX = -1.4137167F;
-                this.crossArmL.rotateAngleY = (-(float)Math.PI / 10F);
-                this.crossArmL.rotateAngleZ = -0.07853982F;
+            if (entityIn.getHeldItemMainhand().isEmpty()) {
+                ModelHelper.func_239105_a_(this.handL, this.handR, true, this.swingProgress, ageInTicks);
             } else {
-                this.handR.rotateAngleX = -0.0F + MathHelper.cos(ageInTicks * 0.19F) * 0.5F;
-                this.handL.rotateAngleX = -1.8849558F + MathHelper.cos(ageInTicks * 0.09F) * 0.15F;
-                this.handR.rotateAngleX += f * 1.2F - f1 * 0.4F;
-                this.handL.rotateAngleX += f * 2.2F - f1 * 0.4F;
-                this.crossArmR.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount * 0.5F;
-                this.crossArmR.rotateAngleY = 0.0F;
-                this.crossArmR.rotateAngleZ = 0.0F;
-                this.crossArmL.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount * 0.5F;
-                this.crossArmL.rotateAngleY = 0.0F;
-                this.crossArmL.rotateAngleZ = 0.0F;
+                ModelHelper.func_239103_a_(this.handR, this.handL, entityIn, this.swingProgress, ageInTicks);
             }
-
-            this.handR.rotateAngleZ += MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
-            this.handL.rotateAngleZ -= MathHelper.cos(ageInTicks * 0.09F) * 0.05F + 0.05F;
-            this.handR.rotateAngleX += MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
-            this.handL.rotateAngleX -= MathHelper.sin(ageInTicks * 0.067F) * 0.05F;
         } else if (abstractillagerentity$armpose == AbstractIllagerEntity.ArmPose.SPELLCASTING) {
             this.handR.rotationPointZ = 0.0F;
             this.handR.rotationPointX = -5.0F;
