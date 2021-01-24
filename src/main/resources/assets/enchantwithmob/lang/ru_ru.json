@@ -1,6 +1,7 @@
 {
   "item.enchantwithmob.enchanter_spawn_egg": "Яйцо призыва чародея",
   "item.enchantwithmob.mob_enchant_book": "Чародейская книга для существ",
+  "item.enchantwithmob.mob_unenchant_book": "Книга снятия чар для существ",
   "entity.enchantwithmob.enchanter": "Чародей",
   "mobenchant.enchantwithmob.name.enchantwithmob.protection": "Сопротивление",
   "mobenchant.enchantwithmob.name.enchantwithmob.strong": "Сила",
